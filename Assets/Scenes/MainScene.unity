@@ -512,11 +512,10 @@ MonoBehaviour:
   foodLevel: 100
   hungerRate: 1
   hydrationLevel: 100
-  thirstRate: 0.7
+  thirstRate: 5
   restLevel: 100
-  exhaustRate: 3
-  size: 1
-  growthRate: 0
+  exhaustRate: 10
+  growthRate: 1.1
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
