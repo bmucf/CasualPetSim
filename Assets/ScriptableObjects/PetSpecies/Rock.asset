@@ -1,0 +1,28 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cdb6f9d4d54e0dc468d4d4ffb89720b4, type: 3}
+  m_Name: Rock
+  m_EditorClassIdentifier: Assembly-CSharp::Species
+  speciesName: Rock
+  petModel: {fileID: 919132149155446097, guid: 98cc7e231df54b44384371bec580856f, type: 3}
+  maxHungerRange:
+    lowerEnd: 50
+    higherEnd: 1000
+  hungerRate: 10
+  maxHydrationRange:
+    lowerEnd: 0
+    higherEnd: 0
+  thirstRate: 0
+  maxRestRange:
+    lowerEnd: 0
+    higherEnd: 0
+  tireRate: 0
