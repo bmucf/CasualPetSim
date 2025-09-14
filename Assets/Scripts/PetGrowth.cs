@@ -2,14 +2,14 @@ using UnityEngine;
 
 public class PetGrowth : MonoBehaviour
 {
-    [Range(0f, 0.1f)]
+    [Range(0f, 0.005f)]
     public float growthRate;
     private Vector3 scaleChange;
 
     void Awake()
     {
         //makes pet face camera
-        gameObject.transform.position = new Vector3(0, 0, 0);
+        gameObject.transform.position = new Vector3(0.25f, 0, 0);
         gameObject.transform.Rotate(0, 180, 0);
     }
 
