@@ -46,8 +46,8 @@ public class SaveData
 
     // What is being saved
     // Ex: Current Stats, Clothes, Equipment, Currency
+    public string lastSavedTime;
 
-     public string lastSavedTime;
     public void SaveGame()
     {
         SaveData data = new SaveData
