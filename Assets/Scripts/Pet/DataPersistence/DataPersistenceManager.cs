@@ -3,6 +3,10 @@ using UnityEngine;
 using System.Linq;
 using NUnit.Framework;
 using System.Collections.Generic;
+/*
+    This script goes on an empty game object within the scene
+    the category 'File Name' should be named: '{Name}.json'
+*/ 
 
 public class DataPersistenceManager : MonoBehaviour
 {
@@ -18,8 +22,13 @@ public class DataPersistenceManager : MonoBehaviour
 
     private void Awake()
     {
-        if (instance != null)
+        if (instance != null && instance != this)
+        {
             Debug.LogError("Found more than one Data Persistence Manager in scene");
+            Destroy(gameObject);
+            return;
+        }
+            
 
         instance = this;
     }
@@ -29,6 +38,8 @@ public class DataPersistenceManager : MonoBehaviour
         this.dataHandler = new FileDataHandler(Application.persistentDataPath, fileName);
         this.dataPersistenceObjects = FindAllDataPersistenceObjects();
         LoadData();
+
+        Debug.Log($"Found {dataPersistenceObjects.Count} IDataPersistence objects.");
     }
     private void OnApplicationQuit()
     {
@@ -52,11 +63,7 @@ public class DataPersistenceManager : MonoBehaviour
         // save that data to a file using the data handler
         dataHandler.Save(gameData);
 
-        /*
-        string json = JsonUtility.ToJson(gameData);
-        System.IO.File.WriteAllText(Application.persistentDataPath + "/save.json", json);
-        */
-        Debug.Log("Game saved!");
+        // Debug.Log("Game saved!");
     }
 
     public void LoadData()
@@ -71,21 +78,17 @@ public class DataPersistenceManager : MonoBehaviour
             NewGame();
         }
 
-        /*
-        string path = Application.persistentDataPath + "/save.json";
-        if (!System.IO.File.Exists(path)) return;
-
-        string json = System.IO.File.ReadAllText(path);
-        GameData gameData = JsonUtility.FromJson<GameData>(json);
-        */
-
-        // TODO - push the loaded data to all other scripts that need it
         foreach (IDataPersistence dataPersistenceObj in dataPersistenceObjects)
         {
             dataPersistenceObj.LoadData(gameData);
+            if (dataPersistenceObj == null)
+                Debug.LogWarning("Null IDataPersistence object found.");
+            else
+                Debug.Log($"Loaded IDataPersistence: {dataPersistenceObj.GetType().Name}");
+
         }
 
-        Debug.Log("Game loaded!");
+        //Debug.Log("Game loaded!");
     }
    
 
@@ -94,7 +97,7 @@ public class DataPersistenceManager : MonoBehaviour
         IEnumerable<IDataPersistence> dataPersistences = FindObjectsByType<MonoBehaviour>(FindObjectsSortMode.None)
             .OfType<IDataPersistence>();
 
-        return new List<IDataPersistence>(dataPersistenceObjects);
+        return dataPersistences.ToList();
     }
  
 

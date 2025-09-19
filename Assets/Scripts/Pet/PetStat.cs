@@ -1,21 +1,34 @@
 using System;
+using System.Collections;
 using UnityEngine;
 
 // Component attached to the pet GameObject
 // Presentation and Interaction Logic
+
 public class PetStat : MonoBehaviour, IDataPersistence
 {
     // Reference outsourced classes
     // private Pet pet = new Pet();
     private GameData gameData = new GameData();
-    private DataPersistenceManager dataPersistenceManager = new DataPersistenceManager();
+
+    public DataPersistenceManager dataPersistenceManager;
 
     private string lastSavedTime = "";
 
-    void Start()
+    void Awake( ) 
     {
+        dataPersistenceManager = DataPersistenceManager.instance;
+    }
+    IEnumerator Start()
+    {
+        while (DataPersistenceManager.instance == null)
+            yield return null;
+
+        dataPersistenceManager = DataPersistenceManager.instance;
+
         LoadPetState();
     }
+
 
     void Update()
     {
@@ -29,7 +42,7 @@ public class PetStat : MonoBehaviour, IDataPersistence
     }
     public void SaveData(ref GameData data)
     { 
-        data.lastSavedTime = this.lastSavedTime;
+        data.lastSavedTime = DateTime.Now.ToString();
     }
     void ApplyStatEffects()
     {
@@ -45,11 +58,26 @@ public class PetStat : MonoBehaviour, IDataPersistence
     // Load previous pet data
     void LoadPetState()
     {
+        if (dataPersistenceManager == null)
+        {
+            Debug.LogError("DataPersistenceManager is not assigned.");
+            return;
+        }
+
         // TODO: Load from PlayerPrefs or JSON
         dataPersistenceManager.LoadData();
 
 
-        DateTime lastTime = DateTime.Parse(gameData.lastSavedTime);
+        // Debug what's inside gameData after loading
+        Debug.Log("=== GameData Debug ===");
+        Debug.Log($"lastSavedTime: {lastSavedTime}");
+
+        if (!DateTime.TryParse(lastSavedTime, out DateTime lastTime))
+        {
+            Debug.LogWarning("Invalid lastSavedTime. Using current time.");
+            lastTime = DateTime.Now;
+        }
+
         TimeSpan elapsed = DateTime.Now - lastTime;
 
         SimulateOfflineProgress(elapsed.TotalSeconds, gameData);
