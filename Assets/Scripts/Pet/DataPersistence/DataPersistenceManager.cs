@@ -1,12 +1,23 @@
-using System;
-using UnityEngine;
-using System.Linq;
 using NUnit.Framework;
+using System;
 using System.Collections.Generic;
+using System.Linq;
+using Unity.VisualScripting;
+using UnityEngine;
 /*
-    This script goes on an empty game object within the scene
-    the category 'File Name' should be named: '{Name}.json'
-*/ 
+This script goes on an empty game object within the scene
+the category 'File Name' should be named: '{Name}.json'
+*/
+
+//TODO - Problems in LoadData()
+
+/*
+NullReferenceException: Object reference not set to an instance of an object
+DataPersistenceManager.LoadData () (at Assets/Scripts/Pet/DataPersistence/DataPersistenceManager.cs:72)
+PetStat.LoadPetState()(at Assets / Scripts / Pet / PetStat.cs:68)
+PetStat +< Start > d__4.MoveNext()(at Assets / Scripts / Pet / PetStat.cs:29)
+UnityEngine.SetupCoroutine.InvokeMoveNext(System.Collections.IEnumerator enumerator, System.IntPtr returnValueAddress)(at < 98fbc9de20ae47d9bb2559ab79ec6643 >:0)
+*/
 
 public class DataPersistenceManager : MonoBehaviour
 {
