@@ -2,8 +2,10 @@ using System;
 using System.Collections;
 using UnityEngine;
 
-// Component attached to the pet GameObject
-// Presentation and Interaction Logic
+/*
+Component attached to the pet GameObject
+Presentation and Interaction Logic
+*/
 
 public class PetStat : MonoBehaviour, IDataPersistence
 {
@@ -15,20 +17,13 @@ public class PetStat : MonoBehaviour, IDataPersistence
 
     private string lastSavedTime = "";
 
-    void Awake( ) 
-    {
-        dataPersistenceManager = DataPersistenceManager.instance;
-    }
-    IEnumerator Start()
-    {
-        while (DataPersistenceManager.instance == null)
-            yield return null;
 
+    void Start()
+    {
         dataPersistenceManager = DataPersistenceManager.instance;
 
         LoadPetState();
     }
-
 
     void Update()
     {
@@ -40,10 +35,12 @@ public class PetStat : MonoBehaviour, IDataPersistence
     {
         this.lastSavedTime = data.lastSavedTime;
     }
+
     public void SaveData(ref GameData data)
-    { 
+    {
         data.lastSavedTime = DateTime.Now.ToString();
     }
+
     void ApplyStatEffects()
     {
         // Example: clamp values and trigger animations or feedback
@@ -65,12 +62,21 @@ public class PetStat : MonoBehaviour, IDataPersistence
         }
 
         // TODO: Load from PlayerPrefs or JSON
-        dataPersistenceManager.LoadData();
+        GameData loadedData = dataPersistenceManager.LoadData();
 
+        if (loadedData == null)
+        {
+            Debug.LogError("Failed to load GameData.");
+            return;
+        }
+
+        this.gameData = loadedData;
+        this.lastSavedTime = loadedData.lastSavedTime;
 
         // Debug what's inside gameData after loading
-        Debug.Log("=== GameData Debug ===");
-        Debug.Log($"lastSavedTime: {lastSavedTime}");
+        // Debug.Log("=== GameData Debug ===");
+        // Debug.Log($"lastSavedTime: {lastSavedTime}");
+        // Debug.Log($"CurrentTime: {DateTime.Now}");
 
         if (!DateTime.TryParse(lastSavedTime, out DateTime lastTime))
         {
@@ -89,6 +95,7 @@ public class PetStat : MonoBehaviour, IDataPersistence
         // TODO: Save current stats
         dataPersistenceManager.SaveGame();
     }
+
     void SimulateOfflineProgress(double secondsPassed, GameData data)
     {
         Debug.Log("Number of seconds passed: " + secondsPassed);
