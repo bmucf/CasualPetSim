@@ -20,35 +20,37 @@ public abstract class Pet
     public virtual float happinessDecayRate => 0.01f;    //
 
     // Debug Variables
-    [SerializeField]
     private int rateOfChange = 1; // Use to speed up growth/decay rates
 
 
     public virtual void UpdateStats(float deltaTime)
     {
-        hunger += (deltaTime * hungerGrowthRate) * rateOfChange;            // Increase
-        dirtiness += (deltaTime * dirtinessGrowthRate) * rateOfChange;      // Increase
-        sleepiness += (deltaTime * sleepinessGrowthRate) * rateOfChange;    // Increase
-        happiness -= (deltaTime * happinessDecayRate) * rateOfChange;       // Decrease
+        if (hunger < 0)
+            hunger += (deltaTime * hungerGrowthRate) * rateOfChange;            // Increase
 
-        ClampStats();
+        if (dirtiness < 0)
+            dirtiness += (deltaTime * dirtinessGrowthRate) * rateOfChange;      // Increase
+
+        if (sleepiness < 0)
+            sleepiness += (deltaTime * sleepinessGrowthRate) * rateOfChange;    // Increase
+
+        if (happiness > 0)
+            happiness -= (deltaTime * happinessDecayRate) * rateOfChange;       // Decrease
+
+        ClampStats(ref hunger, ref dirtiness, ref sleepiness, ref happiness);
     }
 
-    protected virtual void ClampStats()
+    protected virtual void ClampStats(ref float hunger, ref float dirtiness, ref float sleepiness, ref float happiness)
     {   
         // Clamp values between 0 and 100
         hunger = Mathf.Clamp(hunger, 0f, 100f);
         dirtiness = Mathf.Clamp(dirtiness, 0f, 100f);
         sleepiness = Mathf.Clamp(sleepiness, 0f, 100f);
         happiness = Mathf.Clamp(happiness, 0f, 100f);
+
+        return;
     }
 
-    void SimulateOfflineProgress(double secondsPassed, GameData data)
-    {
-        // TODO
-
-        // Ex: currentHunger = Mathf.Max(0, data.hunger - (float)(secondsPassed * hungerGrowthRate));
-    }
 }
 
 

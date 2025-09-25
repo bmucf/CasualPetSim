@@ -12,10 +12,6 @@ public class PetHunger : MonoBehaviour
     public float nutritionPerFood;
 
 
-    public void Start()
-    {
-        GetComponent<MetabolismCalculator>();
-    }
 
     // Update is called once per frame
     void Update()
