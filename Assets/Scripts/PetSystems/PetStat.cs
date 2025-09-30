@@ -2,15 +2,18 @@ using System;
 using System.Collections;
 using UnityEngine;
 
+// ~ Istvan W
+
 /*
 Component attached to the pet GameObject
 Presentation and Interaction Logic
 */
 
+
 public class PetStat : MonoBehaviour, IDataPersistence
 {
     // Reference outsourced classes
-    // private Pet pet = new Pet();
+    public Pet pet;
     private GameData gameData = new GameData();
 
     public DataPersistenceManager dataPersistenceManager;
@@ -20,6 +23,7 @@ public class PetStat : MonoBehaviour, IDataPersistence
 
     void Start()
     {
+
         dataPersistenceManager = DataPersistenceManager.instance;
 
         LoadPetState();
@@ -28,7 +32,7 @@ public class PetStat : MonoBehaviour, IDataPersistence
     void Update()
     {
         // pet.UpdateStats(Time.deltaTime);
-        ApplyStatEffects();
+        // ApplyStatEffects();
     }
 
     public void LoadData(GameData data)
@@ -99,6 +103,9 @@ public class PetStat : MonoBehaviour, IDataPersistence
     void SimulateOfflineProgress(double secondsPassed, GameData data)
     {
         Debug.Log("Number of seconds passed: " + secondsPassed);
+        Debug.Log($"{pet.hungerMain}");
+        pet.UpdateStats((float)secondsPassed);
+        Debug.Log($"{pet.hungerMain}");
         // TODO
 
         // Ex: currentHunger = Mathf.Max(0, data.hunger - (float)(secondsPassed * hungerGrowthRate));
