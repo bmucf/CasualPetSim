@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 1934273137413725795}
   - component: {fileID: 5200804112754612879}
   m_Layer: 0
-  m_Name: Pet_Rocko
+  m_Name: rockoPrefab
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

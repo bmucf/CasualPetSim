@@ -18,49 +18,18 @@ public class PetFactory
 {
     // TODO - Finish the pet creation using a dictionary to store the information
 
-    // TODO - Generated traits need to be added to a dict that goes inside of PetDict | Wrapper class recommended
-
-    private readonly Dictionary<string, (Pet pet, Dictionary<string, bool> traits)> petDict
-    = new Dictionary<string, (Pet, Dictionary<string, bool>)>();
-
-    private readonly List<string> availableTraits = new List<string> 
-    { 
-        "Drowsy", "Energetic", 
-        "Playful", "Lazy",
-        "Stinky", "Prestine",
-        "Hungry", "Light Eater"
-    };
-
-    // Builds a dictionary of traits for a pet
-    private Dictionary<string, bool> BuildTraitDictionary(List<string> traits)
-    {
-        var dict = new Dictionary<string, bool>();
-        foreach (var trait in traits)
-        {
-            dict[trait] = true;
-        }
-        return dict;
-
-    }
+    // TODO - Create methods for saveing data and loading data and connect it to the corresponding scripts
 
 
-    // Traits that cannot coexist
-    private readonly Dictionary<string, List<string>> conflictingTraits = new Dictionary<string, List<string>>()
-{
-    { "Drowsy", new List<string> { "Energetic" } },
-    { "Energetic", new List<string> { "Drowsy" } },
 
-    { "Lazy", new List<string> { "Playful" } },
-    { "Playful", new List<string> { "Lazy" } },
+    private readonly Dictionary<string, (Pet pet, List<Trait> traits)> petDict
+        = new Dictionary<string, (Pet, List<Trait>)>();
 
-    { "Stinky", new List<string> { "Prestine" } },
-    { "Prestine", new List<string> { "Stinky" } },
 
-    { "Hungry", new List<string> { "Light Eater" } },
-    { "Light Eater", new List<string> { "Hungry" } }
-};
+    private readonly Dictionary<string, GameObject> petPrefabs;
 
-    // Sets the commoness of number of traits
+
+    // Sets how common the number of traits a pet gets is
 
     // Key = number of traits, Value = chance (out of 100)
     private readonly Dictionary<int, float> traitRarity = new Dictionary<int, float>()
@@ -87,12 +56,14 @@ public class PetFactory
         return 1; // fallback
     }
 
-    public PetFactory()
+    // If no pet exists, create default pet
+    public PetFactory(Dictionary<string, GameObject> prefabDict)
     {
-        // If no pets exist, create a default pet
+        petPrefabs = prefabDict;
+
         if (petDict.Count == 0)
         {
-            CreatePet("Rocko", "Rocko");
+            CreatePet("Rocko", "Pet_Rocko");
         }
     }
 
@@ -114,80 +85,78 @@ public class PetFactory
         }
 
         int traitCount = GetTraitCountByRarity();
-        List<string> traits = GetRandomTraits(traitCount);
 
-        // Build dictionary of traits
-        Dictionary<string, bool> traitDict = BuildTraitDictionary(traits);
+        List<Trait> traits = GetRandomTraits(traitCount);
+        petDict.Add(name, (newPet, traits));
 
-        // Store both Pet and its traits in the main dictionary
-        petDict.Add(name, (newPet, traitDict));
 
         return newPet;
     }
 
-    /*
-    /// <summary>
-    /// Get a pet by name.
-    /// </summary>
+
+    // Get a pet by name.
     public Pet GetPet(string name)
     {
-        petDict.TryGetValue(name, out Pet pet);
-        return pet;
+        if (petDict.TryGetValue(name, out var data))
+        {
+            return data.pet;
+        }
+        return null;
     }
 
-    /// <summary>
-    /// Get a read-only list of all pets.
-    /// </summary>
-    public IReadOnlyDictionary<string, Pet> GetAllPets()
+
+    // Get a read-only list of all pets.
+    public IReadOnlyDictionary<string, (Pet pet, List<Trait> traits)> GetAllPetData()
     {
         return petDict;
     }
-    */
+
 
     // Create a Pet instance based on the type name.
-    private Pet InstantiatePetType(string typeName)
+    private Pet InstantiatePetType(string prefabKey)
     {
-        Type petType = Type.GetType(typeName);
-        if (petType == null || !typeof(Pet).IsAssignableFrom(petType))
+        if (!petPrefabs.TryGetValue(prefabKey, out GameObject prefab))
         {
-            Debug.LogError($"Invalid pet type: {typeName}");
+            Debug.LogError($"No prefab found for key: {prefabKey}");
             return null;
         }
 
-        return (Pet)Activator.CreateInstance(petType);
+        GameObject go = GameObject.Instantiate(prefab);
+        Pet pet = go.GetComponent<Pet>();
+
+        if (pet == null)
+        {
+            Debug.LogError($"Prefab {prefabKey} does not contain a Pet component.");
+            return null;
+        }
+
+        return pet;
     }
 
     // Return a random list of traits.
-    // TODO - Add trait logic to prevent contrasting traits from being selected.
-    private List<string> GetRandomTraits(int count)
+    private List<Trait> GetRandomTraits(int count)
     {
-        List<string> selected = new List<string>();
-        List<string> pool = new List<string>(availableTraits);
+        List<Trait> selected = new();
+        List<Trait> pool = new(TraitRegistry.AllTraits.Values);
 
         for (int i = 0; i < count && pool.Count > 0; i++)
         {
             int index = UnityEngine.Random.Range(0, pool.Count);
-            string candidate = pool[index];
+            Trait candidate = pool[index];
 
-            // Check conflicts
-            bool conflicts = false;
-            foreach (string existing in selected)
-            {
-                if (conflictingTraits.ContainsKey(candidate) && conflictingTraits[candidate].Contains(existing))
-                {
-                    conflicts = true;
-                    break;
-                }
-            }
+            // Check for conflicts
+            bool hasConflict = selected.Exists(existing =>
+                candidate.IncompatibleWith.Contains(existing.Name));
 
-            if (!conflicts)
+            if (!hasConflict)
             {
                 selected.Add(candidate);
             }
 
-            pool.RemoveAt(index); // remove from pool regardless to avoid infinite loop
+            pool.RemoveAt(index);
         }
 
         return selected;
     }
+
 }
