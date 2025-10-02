@@ -1,12 +1,11 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
 public class Rotatable : MonoBehaviour
 {
-
     [SerializeField] private InputAction pressed, axis;
+
     [SerializeField] private float rotateSpeed;
 
     public Transform cam;
@@ -17,14 +16,22 @@ public class Rotatable : MonoBehaviour
 
     private void Awake()
     {
-        cam = Camera.main.transform;
+        pressed.AddBinding("<Mouse>/leftButton");
+        pressed.AddBinding("<Touchscreen>/press");
 
-        pressed.Enable();
-        axis.Enable();
+        axis.AddBinding("<Mouse>/delta");
+        axis.AddBinding("<Touchscreen>/delta");
 
         pressed.performed += _ => { StartCoroutine(Rotate()); };
         pressed.canceled += _ => { rotateAllowed = false; };
         axis.performed += context => { rotation = context.ReadValue<Vector2>(); };
+
+        pressed.Enable();
+        axis.Enable();
+
+        rotateSpeed = 0.3f;
+
+        cam = Camera.main.transform;
     }
 
     private IEnumerator Rotate()
