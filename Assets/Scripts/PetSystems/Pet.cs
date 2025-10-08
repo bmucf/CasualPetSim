@@ -8,7 +8,7 @@ using UnityEngine.Windows;
 // Handles all the factors a pet can inherit related to pet stats
 // Data and Simulation Logic
 
-public abstract class Pet
+public abstract class Pet : MonoBehaviour 
 {
     // Main stats - Starting Values
     public float hungerMain = 50f;
@@ -19,32 +19,34 @@ public abstract class Pet
     // Sub-system will be averaged out to get the main stats value. Sub systems will not be clamped
 
     // Sub-system stats - Starting Values
+    /*
     [Header("Hunger Systems")]
-    public float fullness = 100f;
-    public float hydration = 100f;
+    private float fullness = 100f;
+    private float hydration = 100f;
 
     [Header("Sleep Systems")]
-    public float sleepiness = 0f;
+    private float sleepiness = 0f;
 
     [Header("Happiness Systems")]
-    public float playfulness = 100f;
-    public float excercise = 100f;
-    public float attention = 100f;
+    private float playfulness = 100f;
+    private float excercise = 100f;
+    private float attention = 100f;
 
     [Header("Dirtiness Systems")]
-    public float dirtinesss = 0f;
+    private float dirtinesss = 0f;
+    */
 
     // Default Growth/Decay Rates as virtual properties
-    public virtual float hungerGrowthRate => 0.01f;      // Per second v
-    public virtual float dirtinessGrowthRate => 0.01f;   //
-    public virtual float sleepinessGrowthRate => 0.01f;  //
-    public virtual float happinessDecayRate => 0.01f;    //
+    public float hungerGrowthRate => 0.01f;      // Per second v
+    public float dirtinessGrowthRate => 0.01f;   //
+    public float sleepinessGrowthRate => 0.01f;  //
+    public float happinessDecayRate => 0.01f;    //
 
     // Debug Variables
     private int rateOfChange = 1; // Use to speed up growth/decay rates
 
 
-    public virtual void UpdateStats(float time)
+    public void UpdateStats(float time)
     {
         if (hungerMain <= 0)
             hungerMain += (time * hungerGrowthRate) * rateOfChange;            // Increase
@@ -62,7 +64,7 @@ public abstract class Pet
 
     }
 
-    protected virtual void ClampStats(ref float hunger, ref float dirtiness, ref float sleepiness, ref float happiness)
+    void ClampStats(ref float hunger, ref float dirtiness, ref float sleepiness, ref float happiness)
     {   
         // Clamp values between 0 and 100
         hunger = Mathf.Clamp(hunger, 0f, 100f);

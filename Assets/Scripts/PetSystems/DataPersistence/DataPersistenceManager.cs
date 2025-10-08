@@ -30,15 +30,30 @@ public class DataPersistenceManager : MonoBehaviour
             Destroy(gameObject);
             return;
         }
-            
+        /*    
         this.dataHandler = new FileDataHandler(Application.persistentDataPath, fileName);
         this.dataPersistenceObjects = FindAllDataPersistenceObjects();
+        */
         instance = this;
+
+
+        if (fileName == null || fileName == "")
+        {
+            Debug.Log("File name is empty!");
+            fileName = "Test.json";
+        }
+        else 
+        {
+            Debug.Log($"The file name is '{fileName}'");
+        }
+            
 
     }
 
     private void Start()
     {
+        this.dataHandler = new FileDataHandler(Application.persistentDataPath, fileName);
+        this.dataPersistenceObjects = FindAllDataPersistenceObjects();
 
         LoadData();
 
@@ -46,6 +61,7 @@ public class DataPersistenceManager : MonoBehaviour
     }
     private void OnApplicationQuit()
     {
+        Debug.Log($"Saving info to '{fileName}'.");
         SaveGame();
     }
 
@@ -65,6 +81,8 @@ public class DataPersistenceManager : MonoBehaviour
         }
         // save that data to a file using the data handler
         dataHandler.Save(gameData);
+
+
 
         // Debug.Log("Game saved!");
     }
