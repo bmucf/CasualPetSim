@@ -23,6 +23,14 @@ public class PetStat : MonoBehaviour, IDataPersistence
 
     void Start()
     {
+        if (pet == null)
+        {
+            pet = GetComponent<Pet>();
+            if (pet == null)
+            {
+                Debug.LogError("No Pet-derived component found on this GameObject!");
+            }
+        }
 
         dataPersistenceManager = DataPersistenceManager.instance;
 
@@ -31,7 +39,12 @@ public class PetStat : MonoBehaviour, IDataPersistence
 
     void Update()
     {
-        // pet.UpdateStats(Time.deltaTime);
+        if (pet.hungerMain < 100 || pet.dirtinessMain < 100 || pet.sleepinessMain < 100 || pet.sadnessMain < 100)
+        {
+            pet.UpdateStats(Time.deltaTime);
+            Debug.Log("Stat update called.");
+        }
+
         // ApplyStatEffects();
     }
 

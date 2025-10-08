@@ -13,7 +13,7 @@ public abstract class Pet : MonoBehaviour
     // Main stats - Starting Values
     public float hungerMain = 50f;
     public float dirtinessMain = 50f;
-    public float happinessMain = 50f;
+    public float sadnessMain = 50f;
     public float sleepinessMain = 50f;
 
     // Sub-system will be averaged out to get the main stats value. Sub systems will not be clamped
@@ -40,37 +40,37 @@ public abstract class Pet : MonoBehaviour
     public float hungerGrowthRate => 0.01f;      // Per second v
     public float dirtinessGrowthRate => 0.01f;   //
     public float sleepinessGrowthRate => 0.01f;  //
-    public float happinessDecayRate => 0.01f;    //
+    public float sadnessDecayRate => 0.01f;    //
 
     // Debug Variables
-    private int rateOfChange = 1; // Use to speed up growth/decay rates
+    private int rateOfChange = 100; // Use to speed up growth/decay rates
 
 
     public void UpdateStats(float time)
     {
-        if (hungerMain <= 0)
+        if (hungerMain < 100)
             hungerMain += (time * hungerGrowthRate) * rateOfChange;            // Increase
 
-        if (dirtinessMain <= 0)
+        if (dirtinessMain < 100)
             dirtinessMain += (time * dirtinessGrowthRate) * rateOfChange;      // Increase
 
-        if (sleepinessMain <= 0)
+        if (sleepinessMain < 100)
             sleepinessMain += (time * sleepinessGrowthRate) * rateOfChange;    // Increase
 
-        if (happinessMain >= 0)
-            happinessMain -= (time * happinessDecayRate) * rateOfChange;       // Decrease
+        if (sadnessMain < 100)
+            sadnessMain += (time * sadnessDecayRate) * rateOfChange;       // Increase
 
-        ClampStats(ref hungerMain, ref dirtinessMain, ref sleepinessMain, ref happinessMain);
+        ClampStats(ref hungerMain, ref dirtinessMain, ref sleepinessMain, ref sadnessMain);
 
     }
 
-    void ClampStats(ref float hunger, ref float dirtiness, ref float sleepiness, ref float happiness)
+    void ClampStats(ref float hunger, ref float dirtiness, ref float sleepiness, ref float sadness)
     {   
         // Clamp values between 0 and 100
         hunger = Mathf.Clamp(hunger, 0f, 100f);
         dirtiness = Mathf.Clamp(dirtiness, 0f, 100f);
         sleepiness = Mathf.Clamp(sleepiness, 0f, 100f);
-        happiness = Mathf.Clamp(happiness, 0f, 100f);
+        sadness = Mathf.Clamp(sadness, 0f, 100f);
 
         return;
     }
