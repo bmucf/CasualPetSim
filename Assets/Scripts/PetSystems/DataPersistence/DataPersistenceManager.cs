@@ -4,6 +4,10 @@ using System.Collections.Generic;
 using System.Linq;
 using Unity.VisualScripting;
 using UnityEngine;
+
+// ~ Istvan Wallace
+
+
 /*
 This script goes on an empty game object within the scene
 the category 'File Name' should be named: '{Name}.json'
@@ -39,7 +43,7 @@ public class DataPersistenceManager : MonoBehaviour
 
         if (fileName == null || fileName == "")
         {
-            Debug.Log("File name is empty!");
+            Debug.LogWarning("File name is empty!");
             fileName = "Test.json";
         }
         else 
@@ -53,22 +57,22 @@ public class DataPersistenceManager : MonoBehaviour
     private void Start()
     {
         this.dataHandler = new FileDataHandler(Application.persistentDataPath, fileName);
-        this.dataPersistenceObjects = FindAllDataPersistenceObjects();
 
-        LoadData();
-
-        Debug.Log($"Found {dataPersistenceObjects.Count} IDataPersistence objects.");
+        // LoadData();
     }
     private void OnApplicationQuit()
     {
-        Debug.Log($"Saving info to '{fileName}'.");
+        this.dataPersistenceObjects = FindAllDataPersistenceObjects();
+
+        // Debug.Log($"Found {dataPersistenceObjects.Count} IDataPersistence objects on quit.");
+        // Debug.Log($"Saving info to '{fileName}'.");
         SaveGame();
     }
 
     public void NewGame()
     {
         this.gameData = new GameData();
-        Debug.Log("New game initialized");
+        // Debug.Log("New game initialized");
     }
 
     public void SaveGame()
@@ -89,6 +93,10 @@ public class DataPersistenceManager : MonoBehaviour
 
     public GameData LoadData()
     {
+        this.dataPersistenceObjects = FindAllDataPersistenceObjects();
+
+        // Debug.Log($"Found {dataPersistenceObjects.Count} IDataPersistence objects on load.");
+
         // load any saved data from a file using the data handler
         if (dataHandler == null)
         {
@@ -99,7 +107,7 @@ public class DataPersistenceManager : MonoBehaviour
 
         if (this.gameData == null)
         {
-            Debug.Log("No data was found. Initialing data to defaults.");
+            Debug.LogWarning("No data was found. Initialing data to defaults.");
             NewGame();
         }
 

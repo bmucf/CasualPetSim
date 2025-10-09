@@ -91,9 +91,11 @@ public class PetStat : MonoBehaviour, IDataPersistence
         this.lastSavedTime = loadedData.lastSavedTime;
 
         // Debug what's inside gameData after loading
-        // Debug.Log("=== GameData Debug ===");
-        // Debug.Log($"lastSavedTime: {lastSavedTime}");
-        // Debug.Log($"CurrentTime: {DateTime.Now}");
+        /*
+        Debug.Log("=== GameData Debug ===");
+        Debug.Log($"lastSavedTime: {lastSavedTime}");
+        Debug.Log($"CurrentTime: {DateTime.Now}");
+        */
 
         if (!DateTime.TryParse(lastSavedTime, out DateTime lastTime))
         {
@@ -115,12 +117,12 @@ public class PetStat : MonoBehaviour, IDataPersistence
 
     void SimulateOfflineProgress(double secondsPassed, GameData data)
     {
-        /*
-        Debug.Log("Number of seconds passed: " + secondsPassed);
-        Debug.Log($"{pet.hungerMain}");
+
+        // Debug.Log("Number of seconds passed: " + secondsPassed);
+        // Debug.Log($"{pet.hungerMain}");
         pet.UpdateStats((float)secondsPassed);
-        Debug.Log($"{pet.hungerMain}");
-        */
+        // Debug.Log($"{pet.hungerMain}");
+
         // TODO
 
         // Ex: currentHunger = Mathf.Max(0, data.hunger - (float)(secondsPassed * hungerGrowthRate));

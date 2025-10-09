@@ -2,14 +2,66 @@ using System;
 using System.IO;
 using UnityEngine;
 using UnityEngine.Windows;
+using static GameData;
 
 // ~ Istvan W
 
 // Handles all the factors a pet can inherit related to pet stats
 // Data and Simulation Logic
 
-public abstract class Pet : MonoBehaviour 
+public abstract class Pet : MonoBehaviour, IDataPersistence
 {
+    public DataPersistenceManager dataPersistenceManager;
+
+    public void LoadData(GameData data)
+    {
+        if (string.IsNullOrEmpty(uniqueID))
+        {
+            Debug.LogError("Pet uniqueID is empty! Cannot load.");
+            return;
+        }
+
+        if (data.allPetStats.TryGetValue(uniqueID, out PetStatsData stats))
+        {
+            petName = stats.petName;
+            hungerMain = stats.hungerMain;
+            dirtinessMain = stats.dirtinessMain;
+            sadnessMain = stats.sadnessMain;
+            sleepinessMain = stats.sleepinessMain;
+        }
+        else
+        {
+            Debug.LogWarning($"No save data found for pet with ID: {uniqueID}");
+        }
+    }
+
+    public void SaveData(ref GameData data)
+    {
+        if (string.IsNullOrEmpty(uniqueID))
+        {
+            Debug.LogError("Pet uniqueID is empty! Cannot save.");
+            return;
+        }
+
+        PetStatsData stats = new PetStatsData
+        {
+            petName = petName,
+
+            hungerMain = hungerMain,
+            dirtinessMain = dirtinessMain,
+            sadnessMain = sadnessMain,
+            sleepinessMain = sleepinessMain
+        };
+
+        data.allPetStats[uniqueID] = stats;
+    }
+
+   
+    [SerializeField] 
+    private string uniqueID;
+    public virtual string petName { get; set; }
+
+
     // Main stats - Starting Values
     public float hungerMain = 50f;
     public float dirtinessMain = 50f;
@@ -43,8 +95,13 @@ public abstract class Pet : MonoBehaviour
     public float sadnessDecayRate => 0.01f;    //
 
     // Debug Variables
-    private int rateOfChange = 100; // Use to speed up growth/decay rates
+    private int rateOfChange = 10; // Use to speed up growth/decay rates
 
+    protected virtual void Awake()
+    {
+        if (string.IsNullOrEmpty(uniqueID))
+            uniqueID = Guid.NewGuid().ToString();
+    }
 
     public void UpdateStats(float time)
     {
