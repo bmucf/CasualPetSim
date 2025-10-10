@@ -12,6 +12,8 @@ public class SpawningFood : MonoBehaviour
     public float spawnDelay;
     public float spawnRate;
     public TextMeshProUGUI foodScore;
+    public float mgTimer;
+    public TextMeshProUGUI foodTimer;
 
     
     // Start is called once before the first execution of Update after the MonoBehaviour is created
@@ -21,21 +23,25 @@ public class SpawningFood : MonoBehaviour
         InvokeRepeating("BeginFoodSpawn", spawnDelay, spawnRate);
         uiManager.minigameHasStarted = true;
         
-        
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (foodCount >= 6)
+        if (uiManager.minigameHasStarted)
         {
-           uiManager.minigameHasStarted = false;
-           foodCount = 0;
-           uiManager.mainHUD.SetActive(true);
-           uiManager.eatMinigame.SetActive(false);
+            mgTimer -= Time.deltaTime;
+            foodTimer.text = "Time: " + mgTimer;
+            if (mgTimer <= 0 || foodCount >= 10)
+            {
+                uiManager.minigameHasStarted = false;
+                foodCount = 0;
+                uiManager.mainHUD.SetActive(true);
+                uiManager.eatMinigame.SetActive(false);
+                mgTimer = 10;
+            }
+
         }
-
-
     }
 
     private void BeginFoodSpawn()
@@ -54,7 +60,7 @@ public class SpawningFood : MonoBehaviour
     public void UpdateScore()
     {
         foodCount++;
-        foodScore.text = "Food Score: " + foodCount;
+        foodScore.text = "Food Score: " + foodCount + " / 10";
     }
 
 
