@@ -1,35 +1,62 @@
 using UnityEngine;
-using UnityEngine.SceneManagement; 
+using UnityEngine.SceneManagement;
+
 public class BathroomUI : MonoBehaviour
 {
-    [Header("Optional Panels")]
-    public GameObject bathPanel;
-    public GameObject mirrorPanel;
-    public GameObject cabinetPanel;
+    [Header("Popups")]
+    public GameObject popupMirror;
+    public GameObject popupBathtub;
+    public GameObject popupCabinet;
+    public GameObject popupCart;
+    public GameObject popupSettings;
 
-    public void OnBathtubPressed()
+    public void CloseAll()
     {
-        Debug.Log("Bathtub pressed ¡ú open bath UI");
-        if (bathPanel) bathPanel.SetActive(true);
+        if (popupMirror) popupMirror.SetActive(false);
+        if (popupBathtub) popupBathtub.SetActive(false);
+        if (popupCabinet) popupCabinet.SetActive(false);
+        if (popupCart) popupCart.SetActive(false);
+        if (popupSettings) popupSettings.SetActive(false);
     }
-
+    //Button_Mirror
     public void OnMirrorPressed()
     {
-        Debug.Log("Mirror pressed ¡ú open grooming UI");
-        if (mirrorPanel) mirrorPanel.SetActive(true);
+        CloseAll();
+        if (popupMirror) popupMirror.SetActive(true);
     }
-
+    //Button_Bathtub
+    public void OnBathtubPressed()
+    {
+        CloseAll();
+        if (popupBathtub) popupBathtub.SetActive(true);
+    }
+    //Button_Cabinet
     public void OnCabinetPressed()
     {
-        Debug.Log("Cabinet pressed ¡ú open cabinet UI");
-        if (cabinetPanel) cabinetPanel.SetActive(true);
+        CloseAll();
+        if (popupCabinet) popupCabinet.SetActive(true);
+    }
+    //Button_Cart
+    public void OnCartPressed()
+    {
+        CloseAll(); if (popupCart) popupCart.SetActive(true);
+    }
+    //Button_Setting
+    public void OnSettingsPressed()
+    {
+        CloseAll(); if (popupSettings) popupSettings.SetActive(true);
+    }
+    //Button_Close
+    public void OnClosePressed()
+    {
+        CloseAll();
     }
 
     
+
+    //Home
     public void OnHomePressed()
     {
-        Debug.Log("Home button pressed ¡ú returning to main scene");
         SceneManager.LoadScene("LRWhitebox");
-        
     }
 }
