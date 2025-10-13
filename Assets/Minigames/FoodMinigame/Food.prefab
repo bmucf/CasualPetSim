@@ -121,7 +121,7 @@ Rigidbody:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3750125163015771055}
   serializedVersion: 5
-  m_Mass: 1
+  m_Mass: 1.05
   m_LinearDamping: 0
   m_AngularDamping: 0.05
   m_CenterOfMass: {x: 0, y: 0, z: 0}
@@ -152,4 +152,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8872247bc6887ca4c92b6092b3a10955, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::NewMonoBehaviourScript
-  spawnFood: {fileID: 1695292759414564814, guid: f0ef1d8926f5b4747b135918b8a4c6dc, type: 3}
+  fallSpeed: 7.5
