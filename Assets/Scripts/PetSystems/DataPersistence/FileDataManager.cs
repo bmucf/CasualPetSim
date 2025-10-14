@@ -1,6 +1,8 @@
 using UnityEngine;
 using System;
 using System.IO;
+using Newtonsoft.Json;
+
 public class FileDataHandler
 {
 
@@ -34,7 +36,7 @@ public class FileDataHandler
                 }
 
                 // deserialize the data from Json back into C# object
-                loadedData = JsonUtility.FromJson<GameData>(dataToLoad);
+                loadedData = JsonConvert.DeserializeObject<GameData>(dataToLoad);
             }
             catch (Exception e)
             {
@@ -55,7 +57,7 @@ public class FileDataHandler
             Directory.CreateDirectory(Path.GetDirectoryName(fullPath));
 
             // serialize the C# game data object into Json
-            string dataToSave = JsonUtility.ToJson(data, true);
+            string dataToSave = JsonConvert.SerializeObject(data, Formatting.Indented);
 
             // write the serialized data to the file
             using (FileStream stream = new FileStream(fullPath, FileMode.Create))
