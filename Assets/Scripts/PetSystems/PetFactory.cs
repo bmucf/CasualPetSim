@@ -14,12 +14,65 @@ using UnityEngine;
  * It should run a check to see if atleast one pet object has been made.
  * If not, create a new starting pet 'Rocko'
 */
-public class PetFactory
+public class PetFactory : IDataPersistence
 {
     // TODO - Finish the pet creation using a dictionary to store the information
 
-    // TODO - Create methods for saveing data and loading data and connect it to the corresponding scripts
+    // TODO - Create methods for saving data and loading data and connect it to the corresponding scripts
+    [Serializable]
+    public class PetData
+    {
+        public string name;
+        public string type;
+        public List<string> traitNames;
+    }
 
+    public void SaveData(ref GameData data)
+    {
+        data.allPets.Clear();
+
+        foreach (var kvp in petDict)
+        {
+            PetData petData = new PetData
+            {
+                name = kvp.Key,
+                type = kvp.Value.pet.TypeName, // Assuming Pet has a TypeName property
+                traitNames = kvp.Value.traits.ConvertAll(t => t.Name)
+            };
+
+            data.allPets.Add(petData);
+        }
+    }
+
+    public void LoadData(GameData data)
+    {
+        petDict.Clear();
+
+        foreach (var petData in data.allPets)
+        {
+            Pet pet = InstantiatePetType(petData.type);
+            if (pet == null)
+            {
+                Debug.LogError($"Failed to load pet: {petData.name}");
+                continue;
+            }
+
+            List<Trait> traits = new();
+            foreach (string traitName in petData.traitNames)
+            {
+                if (TraitRegistry.AllTraits.TryGetValue(traitName, out Trait trait))
+                {
+                    traits.Add(trait);
+                }
+                else
+                {
+                    Debug.LogWarning($"Trait '{traitName}' not found in registry.");
+                }
+            }
+
+            petDict.Add(petData.name, (pet, traits));
+        }
+    }
 
 
     private readonly Dictionary<string, (Pet pet, List<Trait> traits)> petDict
@@ -113,25 +166,27 @@ public class PetFactory
 
 
     // Create a Pet instance based on the type name.
-    private Pet InstantiatePetType(string prefabKey)
+private Pet InstantiatePetType(string prefabKey)
+{
+    if (!petPrefabs.TryGetValue(prefabKey, out GameObject prefab))
     {
-        if (!petPrefabs.TryGetValue(prefabKey, out GameObject prefab))
-        {
-            Debug.LogError($"No prefab found for key: {prefabKey}");
-            return null;
-        }
-
-        GameObject go = GameObject.Instantiate(prefab);
-        Pet pet = go.GetComponent<Pet>();
-
-        if (pet == null)
-        {
-            Debug.LogError($"Prefab {prefabKey} does not contain a Pet component.");
-            return null;
-        }
-
-        return pet;
+        Debug.LogError($"No prefab found for key: {prefabKey}");
+        return null;
     }
+
+    GameObject go = GameObject.Instantiate(prefab);
+    Pet pet = go.GetComponent<Pet>();
+
+    if (pet == null)
+    {
+        Debug.LogError($"Prefab {prefabKey} does not contain a Pet component.");
+        return null;
+    }
+
+    pet.Initialize(prefabKey); // Set the TypeName here
+
+    return pet;
+}
 
     // Return a random list of traits.
     private List<Trait> GetRandomTraits(int count)
@@ -158,5 +213,7 @@ public class PetFactory
 
         return selected;
     }
+
+
 
 }

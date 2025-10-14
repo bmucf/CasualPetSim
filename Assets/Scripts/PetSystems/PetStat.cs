@@ -18,7 +18,7 @@ public class PetStat : MonoBehaviour, IDataPersistence
 
     public DataPersistenceManager dataPersistenceManager;
 
-    private string lastSavedTime = "";
+    private string lastSavedTime;
 
 
     void Start()

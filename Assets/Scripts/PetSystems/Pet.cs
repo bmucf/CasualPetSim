@@ -10,6 +10,8 @@ using UnityEngine.Windows;
 
 public abstract class Pet
 {
+    public string TypeName { get; private set; }
+
     // Main stats - Starting Values
     public float hungerMain = 50f;
     public float dirtinessMain = 50f;
@@ -71,6 +73,11 @@ public abstract class Pet
         happiness = Mathf.Clamp(happiness, 0f, 100f);
 
         return;
+    }
+
+    public void Initialize(string typeName)
+    {
+        TypeName = typeName;
     }
 
 }
