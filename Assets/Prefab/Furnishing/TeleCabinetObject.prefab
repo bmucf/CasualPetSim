@@ -92,7 +92,7 @@ PrefabInstance:
     - target: {fileID: -7511558181221131132, guid: 29feb6d1620321647999630b4747b0ae, type: 3}
       propertyPath: 'm_Materials.Array.data[0]'
       value: 
-      objectReference: {fileID: 2100000, guid: 5e538e23d54adbf44bf6649a1231065f, type: 2}
+      objectReference: {fileID: 2100000, guid: b5b5e3a9fffbe6445926bab1e77bc31a, type: 2}
     - target: {fileID: 919132149155446097, guid: 29feb6d1620321647999630b4747b0ae, type: 3}
       propertyPath: m_Name
       value: Large Cabnet
