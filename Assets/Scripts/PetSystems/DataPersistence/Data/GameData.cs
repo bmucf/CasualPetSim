@@ -3,7 +3,8 @@ using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
 using UnityEngine.Windows;
-using static PetFactory;
+
+// ~ Istvan Wallace
 
 [System.Serializable]
 public class GameData
@@ -12,16 +13,17 @@ public class GameData
     // Ex: Current Stats, Clothes, Equipment, Currency
     public string lastSavedTime;
 
-    public List<PetData> allPets;
+    public Dictionary<string, PetStatsData> allPetStats;
+
 
     // the values defined in this constructor will be the default values
     // the game starts with when there's no data to Load
 
+    // Initialize references
     public GameData()
     {
         this.lastSavedTime = DateTime.Now.ToString(); // ISO 8601 format
-
-        this.allPets = new List<PetData>();
+        allPetStats = new Dictionary<string, PetStatsData>();
     }
 
 }
