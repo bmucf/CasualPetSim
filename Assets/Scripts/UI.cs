@@ -13,8 +13,6 @@ public class UI : MonoBehaviour
     public AudioSource sfxSource;
     public bool musicIsMuted;
     public bool sfxIsMuted;
-    public GameObject mainCamera;
-    public GameObject foodCamera;
     
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -25,31 +23,34 @@ public class UI : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-
+        if (minigameHasStarted)
+        {
+            
+        }
     }
 
-    public void GoIntoSettings()
+    private void GoIntoSettings()
     {
         settingsMenu.SetActive(true);
 
     }
 
-    public void BackOutSettings()
+    private void BackOutSettings()
     {
         settingsMenu.SetActive(false);
     }
 
-    public void GoIntoShop()
+    private void GoIntoShop()
     {
         shopMenu.SetActive(true);
     }
 
-    public void BackOutShop()
+    private void BackOutShop()
     {
         shopMenu.SetActive(false);
     }
 
-    public void PauseGame()
+    private void PauseGame()
     {
         gameIsPaused = !gameIsPaused;
         
@@ -63,18 +64,15 @@ public class UI : MonoBehaviour
         }
     }
 
-    public void EatMinigame()
+    private void EatMinigame()
     {
         minigameHasStarted = true;
         mainHUD.SetActive(false);
         eatMinigame.SetActive(true);
-        mainCamera.SetActive(false);
-        foodCamera.SetActive(true);
-
         
     }
 
-    public void ToggleMusic()
+    private void ToggleMusic()
     {
         musicIsMuted = !musicIsMuted;
 
@@ -88,7 +86,7 @@ public class UI : MonoBehaviour
         }
     }
 
-    public void ToggleSFX()
+    private void ToggleSFX()
     {
         sfxIsMuted = !sfxIsMuted;
 
