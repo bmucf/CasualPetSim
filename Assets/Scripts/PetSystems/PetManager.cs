@@ -9,15 +9,6 @@ public class PetManager : MonoBehaviour
 
     private PetFactory petFactory;
 
-    private void Awake()
-    {
-        rockoPrefab = Resources.Load<GameObject>("Prefabs/Pets/rockoPrefab"); // filepath without extension
-        if (rockoPrefab == null)
-        {
-            Debug.LogError("Rocko prefab not found in Resources!");
-        }
-
-    }
     void Start()
     {
         var prefabDict = new Dictionary<string, GameObject>
@@ -28,7 +19,6 @@ public class PetManager : MonoBehaviour
         petFactory = new PetFactory(prefabDict);
 
         // Debug/Test
-        /*
         var myPet = petFactory.CreatePet("Rocko", "Pet_Rocko");
         var petData = petFactory.GetAllPetData();
         foreach (var entry in petData)
@@ -39,6 +29,5 @@ public class PetManager : MonoBehaviour
                 Debug.Log($" - Trait: {trait.Name} ({trait.Description})");
             }
         }
-        */
     }
 }
