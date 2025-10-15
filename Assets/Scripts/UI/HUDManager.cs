@@ -12,23 +12,32 @@ public class HUDManager : MonoBehaviour
     [SerializeField] private Slider sadnessSlider;
     [SerializeField] private Slider sleepinessSlider;
 
+    public int stepSize = 10;
+
     private void Update()
     {
         if (pet == null) return;
 
-        // Normalize 0–100 stats into 0–1 slider values
-        // Only update if the slider is assigned
         if (hungerSlider != null)
-            hungerSlider.value = 1f - (pet.hungerMain / 100f);
+            hungerSlider.value = Quantize(pet.hungerMain);
 
         if (dirtinessSlider != null)
-            dirtinessSlider.value = 1f - (pet.dirtinessMain / 100f);
+            dirtinessSlider.value = Quantize(pet.dirtinessMain);
 
         if (sadnessSlider != null)
-            sadnessSlider.value = 1f - (pet.sadnessMain / 100f);
+            sadnessSlider.value = Quantize(pet.sadnessMain);
 
         if (sleepinessSlider != null)
-            sleepinessSlider.value = 1f - (pet.sleepinessMain / 100f);
-
+            sleepinessSlider.value = Quantize(pet.sleepinessMain);
     }
+
+    // Helper: snap 0–100 stat into steps, then normalize 0–1
+    private float Quantize(float statValue)
+    {
+        // snap to nearest multiple of stepSize
+        int snapped = Mathf.RoundToInt(statValue / stepSize) * stepSize;
+        // normalize and invert (so 0 = full, 100 = empty)
+        return 1f - (snapped / 100f);
+    }
+
 }

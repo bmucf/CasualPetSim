@@ -104,7 +104,7 @@ public abstract class Pet : MonoBehaviour, IDataPersistence
     public float sadnessGrowthRate => 0.01f;    //
 
     // Debug Variables
-    private int rateOfChange = 10; // Use to speed up growth/decay rates
+    private int rateOfChange = 100; // Use to speed up growth/decay rates
 
     protected virtual void Awake()
     {
