@@ -81,6 +81,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: -7511558181221131132, guid: 1ee8b9956d8a9054cae097b77ebf0712, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: b55ad9536ee7fbf4692b7a2be7808297, type: 2}
     - target: {fileID: 919132149155446097, guid: 1ee8b9956d8a9054cae097b77ebf0712, type: 3}
       propertyPath: m_Name
       value: Bed
@@ -155,6 +159,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 3.981
       objectReference: {fileID: 0}
+    - target: {fileID: -7511558181221131132, guid: 0856d5dc42d291144940f5c3c93dc8ed, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 354b58bdfae28774eb05cf6cb815614c, type: 2}
     - target: {fileID: 919132149155446097, guid: 0856d5dc42d291144940f5c3c93dc8ed, type: 3}
       propertyPath: m_Name
       value: Pillow
