@@ -3,7 +3,6 @@ using UnityEngine.Rendering;
 
 public class BowlMovement : MonoBehaviour
 {
-    public Camera food;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -15,10 +14,10 @@ public class BowlMovement : MonoBehaviour
     {
         Vector3 pos = Input.mousePosition;
         
-        pos.z = Vector3.Distance(food.transform.position, transform.position);
+        pos.z = Vector3.Distance(Camera.main.transform.position, transform.position);
 
-        Vector3 worldPos = food.ScreenToWorldPoint(pos);
+        Vector3 worldPos = Camera.main.ScreenToWorldPoint(pos);
 
-        transform.position = new Vector3(worldPos.x, transform.position.y, transform.position.z);
+        transform.position = new Vector3(transform.position.x, transform.position.y, worldPos.z);
     }
 }

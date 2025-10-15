@@ -12,8 +12,7 @@ GameObject:
   - component: {fileID: 1522579420095551358}
   - component: {fileID: 4405398251947785152}
   - component: {fileID: 1335349847978925780}
-  - component: {fileID: 5461523047281303535}
-  m_Layer: 5
+  m_Layer: 0
   m_Name: Bowl
   m_TagString: Bowl
   m_Icon: {fileID: 0}
@@ -30,7 +29,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 8, y: 3.03, z: 0.43}
-  m_LocalScale: {x: 0.37915832, y: 0.25267965, z: 0.42347997}
+  m_LocalScale: {x: 2.3639, y: 1.4389, z: 4.885804}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
@@ -112,15 +111,3 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 1.1562935, y: 1.0896332, z: 1.125333}
   m_Center: {x: 0.008860994, y: 0.044816777, z: -0.036726717}
---- !u!114 &5461523047281303535
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1443732737827373104}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 640aec58d2fa65f46b6a3b6210240ba2, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::BowlMovement
