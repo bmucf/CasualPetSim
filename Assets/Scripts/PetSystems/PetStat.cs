@@ -23,6 +23,14 @@ public class PetStat : MonoBehaviour, IDataPersistence
 
     void Start()
     {
+        if (pet == null)
+        {
+            pet = GetComponent<Pet>();
+            if (pet == null)
+            {
+                Debug.LogError("No Pet-derived component found on this GameObject!");
+            }
+        }
 
         dataPersistenceManager = DataPersistenceManager.instance;
 
@@ -31,7 +39,12 @@ public class PetStat : MonoBehaviour, IDataPersistence
 
     void Update()
     {
-        // pet.UpdateStats(Time.deltaTime);
+        if (pet.hungerMain < 100 || pet.dirtinessMain < 100 || pet.sleepinessMain < 100 || pet.sadnessMain < 100)
+        {
+            pet.UpdateStats(Time.deltaTime);
+            Debug.Log("Stat update called.");
+        }
+
         // ApplyStatEffects();
     }
 
@@ -78,9 +91,11 @@ public class PetStat : MonoBehaviour, IDataPersistence
         this.lastSavedTime = loadedData.lastSavedTime;
 
         // Debug what's inside gameData after loading
-        // Debug.Log("=== GameData Debug ===");
-        // Debug.Log($"lastSavedTime: {lastSavedTime}");
-        // Debug.Log($"CurrentTime: {DateTime.Now}");
+        /*
+        Debug.Log("=== GameData Debug ===");
+        Debug.Log($"lastSavedTime: {lastSavedTime}");
+        Debug.Log($"CurrentTime: {DateTime.Now}");
+        */
 
         if (!DateTime.TryParse(lastSavedTime, out DateTime lastTime))
         {
@@ -102,10 +117,12 @@ public class PetStat : MonoBehaviour, IDataPersistence
 
     void SimulateOfflineProgress(double secondsPassed, GameData data)
     {
-        Debug.Log("Number of seconds passed: " + secondsPassed);
-        Debug.Log($"{pet.hungerMain}");
+
+        // Debug.Log("Number of seconds passed: " + secondsPassed);
+        // Debug.Log($"{pet.hungerMain}");
         pet.UpdateStats((float)secondsPassed);
-        Debug.Log($"{pet.hungerMain}");
+        // Debug.Log($"{pet.hungerMain}");
+
         // TODO
 
         // Ex: currentHunger = Mathf.Max(0, data.hunger - (float)(secondsPassed * hungerGrowthRate));
