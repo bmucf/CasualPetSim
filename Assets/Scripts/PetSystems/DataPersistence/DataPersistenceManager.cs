@@ -4,10 +4,6 @@ using System.Collections.Generic;
 using System.Linq;
 using Unity.VisualScripting;
 using UnityEngine;
-
-// ~ Istvan Wallace
-
-
 /*
 This script goes on an empty game object within the scene
 the category 'File Name' should be named: '{Name}.json'
@@ -34,45 +30,29 @@ public class DataPersistenceManager : MonoBehaviour
             Destroy(gameObject);
             return;
         }
-        /*    
+            
         this.dataHandler = new FileDataHandler(Application.persistentDataPath, fileName);
         this.dataPersistenceObjects = FindAllDataPersistenceObjects();
-        */
         instance = this;
-
-
-        if (fileName == null || fileName == "")
-        {
-            Debug.LogWarning("File name is empty!");
-            fileName = "Test.json";
-        }
-        else 
-        {
-            Debug.Log($"The file name is '{fileName}'");
-        }
-            
 
     }
 
     private void Start()
     {
-        this.dataHandler = new FileDataHandler(Application.persistentDataPath, fileName);
 
-        // LoadData();
+        LoadData();
+
+        Debug.Log($"Found {dataPersistenceObjects.Count} IDataPersistence objects.");
     }
     private void OnApplicationQuit()
     {
-        this.dataPersistenceObjects = FindAllDataPersistenceObjects();
-
-        // Debug.Log($"Found {dataPersistenceObjects.Count} IDataPersistence objects on quit.");
-        // Debug.Log($"Saving info to '{fileName}'.");
         SaveGame();
     }
 
     public void NewGame()
     {
         this.gameData = new GameData();
-        // Debug.Log("New game initialized");
+        Debug.Log("New game initialized");
     }
 
     public void SaveGame()
@@ -86,17 +66,11 @@ public class DataPersistenceManager : MonoBehaviour
         // save that data to a file using the data handler
         dataHandler.Save(gameData);
 
-
-
         // Debug.Log("Game saved!");
     }
 
     public GameData LoadData()
     {
-        this.dataPersistenceObjects = FindAllDataPersistenceObjects();
-
-        // Debug.Log($"Found {dataPersistenceObjects.Count} IDataPersistence objects on load.");
-
         // load any saved data from a file using the data handler
         if (dataHandler == null)
         {
@@ -107,7 +81,7 @@ public class DataPersistenceManager : MonoBehaviour
 
         if (this.gameData == null)
         {
-            Debug.LogWarning("No data was found. Initialing data to defaults.");
+            Debug.Log("No data was found. Initialing data to defaults.");
             NewGame();
         }
 
