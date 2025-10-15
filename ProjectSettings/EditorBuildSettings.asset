@@ -17,6 +17,12 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/PetNeeds.unity
     guid: 54d0dca530f2c4748b0f329b8ce2a7c8
+  - enabled: 1
+    path: Assets/Scenes/Bathroom.unity
+    guid: c068f5cfde62fdf429efda19812ac300
+  - enabled: 1
+    path: Assets/Scenes/LRWhitebox.unity
+    guid: 0d81d75c41cd23a4a91665905b7679fc
   m_configObjects:
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 052faaac586de48259a63d0c4782560b, type: 3}
   m_UseUCBPForAssetBundles: 0
