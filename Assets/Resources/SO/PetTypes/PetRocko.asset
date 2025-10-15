@@ -1,0 +1,24 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6f4d69086777b8e41aff44c880936844, type: 3}
+  m_Name: PetRocko
+  m_EditorClassIdentifier: Assembly-CSharp::PetTypeDefinition
+  typeName: PetRocko
+  prefab: {fileID: 6319851488511618616, guid: ece4a2f72c95dd34eba8607eab1aa122, type: 3}
+  defaultHunger: 50
+  defaultDirtiness: 50
+  defaultSadness: 50
+  defaultSleepiness: 50
+  hungerGrowthRate: 0.01
+  dirtinessGrowthRate: 0.01
+  sleepinessGrowthRate: 0.01
+  sadnessGrowthRate: 0.01

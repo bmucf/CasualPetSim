@@ -24,6 +24,8 @@ public abstract class Pet : MonoBehaviour, IDataPersistence
         if (data.allPetStats.TryGetValue(uniqueID, out PetStatsData stats))
         {
             petName = stats.petName;
+            typeName = stats.typeName;
+
             hungerMain = stats.hungerMain;
             dirtinessMain = stats.dirtinessMain;
             sadnessMain = stats.sadnessMain;
@@ -45,21 +47,28 @@ public abstract class Pet : MonoBehaviour, IDataPersistence
 
         PetStatsData stats = new PetStatsData
         {
+            uniqueID = uniqueID,
             petName = petName,
+            typeName = typeName,
 
             hungerMain = hungerMain,
             dirtinessMain = dirtinessMain,
             sadnessMain = sadnessMain,
             sleepinessMain = sleepinessMain
+
         };
 
         data.allPetStats[uniqueID] = stats;
     }
 
    
-    [SerializeField] 
-    private string uniqueID;
+ 
+    [SerializeField] private string uniqueID;
+    public string UniqueID => uniqueID;
+
     public virtual string petName { get; set; }
+
+    public string typeName;
 
 
     // Main stats - Starting Values
@@ -92,7 +101,7 @@ public abstract class Pet : MonoBehaviour, IDataPersistence
     public float hungerGrowthRate => 0.01f;      // Per second v
     public float dirtinessGrowthRate => 0.01f;   //
     public float sleepinessGrowthRate => 0.01f;  //
-    public float sadnessDecayRate => 0.01f;    //
+    public float sadnessGrowthRate => 0.01f;    //
 
     // Debug Variables
     private int rateOfChange = 10; // Use to speed up growth/decay rates
@@ -115,7 +124,7 @@ public abstract class Pet : MonoBehaviour, IDataPersistence
             sleepinessMain += (time * sleepinessGrowthRate) * rateOfChange;    // Increase
 
         if (sadnessMain < 100)
-            sadnessMain += (time * sadnessDecayRate) * rateOfChange;       // Increase
+            sadnessMain += (time * sadnessGrowthRate) * rateOfChange;       // Increase
 
         ClampStats(ref hungerMain, ref dirtinessMain, ref sleepinessMain, ref sadnessMain);
 
@@ -130,6 +139,31 @@ public abstract class Pet : MonoBehaviour, IDataPersistence
         sadness = Mathf.Clamp(sadness, 0f, 100f);
 
         return;
+    }
+
+    public void Initialize(string typeName, string petName = null)
+    {
+        this.typeName = typeName;
+        if (!string.IsNullOrEmpty(petName))
+            this.petName = petName;
+
+        if (string.IsNullOrEmpty(uniqueID))
+            uniqueID = Guid.NewGuid().ToString();
+    }
+
+    public void ApplyDefaults(PetTypeDefinition def)
+    {
+        hungerMain = def.defaultHunger;
+        dirtinessMain = def.defaultDirtiness;
+        sadnessMain = def.defaultSadness;
+        sleepinessMain = def.defaultSleepiness;
+    }
+    public void SetUniqueID(string id)
+    {
+        if (!string.IsNullOrEmpty(id))
+        {
+            uniqueID = id;
+        }
     }
 
 }

@@ -1,44 +1,36 @@
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 // ~ Istvan W
 
 public class PetManager : MonoBehaviour
 {
-    [SerializeField] private GameObject rockoPrefab;
+    [SerializeField] private PetTypeRegistrySO registry;
+    [SerializeField] private TraitRegistrySO traitRegistry;
 
     private PetFactory petFactory;
+    private Pet myPet;
 
     private void Awake()
     {
-        rockoPrefab = Resources.Load<GameObject>("Prefabs/Pets/rockoPrefab"); // filepath without extension
-        if (rockoPrefab == null)
-        {
-            Debug.LogError("Rocko prefab not found in Resources!");
-        }
+        registry = Resources.Load<PetTypeRegistrySO>("SO/PetTypeRegistrySO");
+        traitRegistry = Resources.Load<TraitRegistrySO>("SO/TraitRegistrySO");
 
     }
     void Start()
     {
-        var prefabDict = new Dictionary<string, GameObject>
-        {
-            { "Pet_Rocko", rockoPrefab }
-        };
+        // Create the pet
+        petFactory = new PetFactory(registry, traitRegistry);
+        myPet = petFactory.CreatePet("Rocko", "PetRocko");
 
-        petFactory = new PetFactory(prefabDict);
-
-        // Debug/Test
-        /*
-        var myPet = petFactory.CreatePet("Rocko", "Pet_Rocko");
-        var petData = petFactory.GetAllPetData();
-        foreach (var entry in petData)
-        {
-            Debug.Log($"Pet: {entry.Key}");
-            foreach (var trait in entry.Value.traits)
-            {
-                Debug.Log($" - Trait: {trait.Name} ({trait.Description})");
-            }
-        }
-        */
+        // Place it in the scene under the PetManager
+        var go = myPet.gameObject;
+        go.transform.SetParent(this.transform);   // parent under PetManager
+        go.transform.position = Vector3.zero;     // put at world origin (or any position you want)
     }
+
+
+
 }
+
