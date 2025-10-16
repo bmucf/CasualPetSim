@@ -1,0 +1,16 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 00647b0b1555fbc4b98e11ad84fd9edd, type: 3}
+  m_Name: PetTypeRegistrySO
+  m_EditorClassIdentifier: Assembly-CSharp::PetTypeRegistry
+  petTypes:
+  - {fileID: 11400000, guid: 8e1cee2bbb2d8e74b9fb409f468514df, type: 2}
