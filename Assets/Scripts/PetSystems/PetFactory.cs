@@ -45,7 +45,7 @@ public class PetFactory : IDataPersistence
 
         foreach (var kvp in petDict)
         {
-            string id = kvp.Key;
+            string uniqueID = kvp.Key;
             Pet pet = kvp.Value.pet;
             List<TraitDefinition> traits = kvp.Value.traits;
 
@@ -55,7 +55,7 @@ public class PetFactory : IDataPersistence
 
             PetStatsData stats = new PetStatsData
             {
-                uniqueID = id,
+                // uniqueID = uniqueId,
                 petName = pet.petName,
                 typeName = pet.typeName,
 
@@ -67,7 +67,7 @@ public class PetFactory : IDataPersistence
                 traitNames = traits.ConvertAll(t => t.traitName) // use traitName from SO
             };
 
-            data.allPetStats[id] = stats;
+            data.allPetStats[uniqueID] = stats;
         }
     }
 
@@ -98,7 +98,7 @@ public class PetFactory : IDataPersistence
             }
 
             // Restore identity
-            pet.SetUniqueID(stats.uniqueID);
+            pet.SetUniqueID(kvp.Key);
             pet.Initialize(stats.typeName, stats.petName);
 
             // Restore stats

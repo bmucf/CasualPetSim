@@ -47,7 +47,7 @@ public abstract class Pet : MonoBehaviour, IDataPersistence
 
         PetStatsData stats = new PetStatsData
         {
-            uniqueID = uniqueID,
+            // uniqueID = uniqueID,
             petName = petName,
             typeName = typeName,
 
