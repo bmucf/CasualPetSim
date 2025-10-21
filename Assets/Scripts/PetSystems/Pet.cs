@@ -16,6 +16,7 @@ public abstract class Pet : MonoBehaviour, IDataPersistence
 
     public void LoadData(GameData data)
     {
+        
         if (string.IsNullOrEmpty(uniqueID))
         {
             Debug.LogError("Pet uniqueID is empty! Cannot load.");
@@ -57,6 +58,9 @@ public abstract class Pet : MonoBehaviour, IDataPersistence
             Debug.LogWarning("allPetStats dictionary is null, initializing...");
             data.allPetStats = new Dictionary<string, PetStatsData>();
         }
+
+        // Add unique ID to list
+        data.AddPetID(uniqueID);
 
         PetStatsData stats = new PetStatsData
         {

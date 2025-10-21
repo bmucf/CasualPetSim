@@ -145,6 +145,10 @@ public class DataPersistenceManager : MonoBehaviour
 
         return dataPersistences.ToList();
     }
- 
+
+    public GameData GetGameData()
+    {
+        return this.gameData;
+    }
 
 }

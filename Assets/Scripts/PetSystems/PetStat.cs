@@ -20,9 +20,6 @@ public class PetStat : MonoBehaviour, IDataPersistence
 
     public DataPersistenceManager dataPersistenceManager;
 
-    private string lastSavedTime;
-
-
     void Start()
     {
         if (pet == null)
@@ -35,8 +32,6 @@ public class PetStat : MonoBehaviour, IDataPersistence
         }
 
         dataPersistenceManager = DataPersistenceManager.instance;
-
-        // LoadPetState();
     }
 
     void Update()
@@ -110,65 +105,6 @@ public class PetStat : MonoBehaviour, IDataPersistence
         data.allPetLastSavedTimes[pet.UniqueID] = DateTime.Now.ToString();
     }
 
-
-    void ApplyStatEffects()
-    {
-        // Example: clamp values and trigger animations or feedback
-        // E.g. If Hunger > 80 trigger sadSound and sadAnimation
-
-        // pet.hunger = Mathf.Clamp(pet.hunger, 0f, 100f);
-        // pet.happiness = Mathf.Clamp(pet.happiness, 0f, 100f);
-
-        // TODO: Add visual/audio feedback based on thresholds
-    }
-
-    // Load previous pet data
-    void LoadPetState()
-    {
-        if (dataPersistenceManager == null || pet == null)
-        {
-            Debug.LogError("DataPersistenceManager or Pet reference is missing.");
-            return;
-        }
-
-        GameData loadedData = dataPersistenceManager.LoadData();
-        if (loadedData == null)
-        {
-            Debug.LogError("Failed to load GameData.");
-            return;
-        }
-
-        this.gameData = loadedData;
-
-        string petID = pet.UniqueID;
-
-        string savedTimeStr;
-        if (!loadedData.allPetLastSavedTimes.TryGetValue(petID, out savedTimeStr))
-        {
-            // Debug.Log($"No saved time found for pet '{petID}'. Using current time.");
-            savedTimeStr = DateTime.Now.ToString();
-            loadedData.allPetLastSavedTimes[petID] = savedTimeStr; // Optional: init the value
-        }
-
-        if (!DateTime.TryParse(savedTimeStr, out DateTime lastTime))
-        {
-            Debug.LogWarning("Invalid lastSavedTime. Using current time.");
-            lastTime = DateTime.Now;
-        }
-
-        TimeSpan elapsed = DateTime.Now - lastTime;
-
-        SimulateOfflineProgress(elapsed.TotalSeconds, loadedData);
-    }
-
-
-
-    // Save current pet data
-    void SavePetState()
-    {
-        // TODO: Save current stats
-        dataPersistenceManager.SaveGame();
-    }
 
     void SimulateOfflineProgress(double secondsPassed, GameData data)
     {
