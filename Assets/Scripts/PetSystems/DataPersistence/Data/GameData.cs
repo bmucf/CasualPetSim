@@ -13,7 +13,9 @@ public class GameData
     // Ex: Current Stats, Clothes, Equipment, Currency
     public string lastSavedTime;
 
-    public Dictionary<string, PetStatsData> allPetStats;
+    // Unique ID is dictionary key
+    public Dictionary<string, PetStatsData> allPetStats; // Name, Type, Stats, and Traits
+    public Dictionary<string, string> allPetLastSavedTimes; // Last saved time
 
 
     // the values defined in this constructor will be the default values
@@ -23,7 +25,9 @@ public class GameData
     public GameData()
     {
         this.lastSavedTime = DateTime.Now.ToString(); // ISO 8601 format
+
         allPetStats = new Dictionary<string, PetStatsData>();
+        allPetLastSavedTimes = new Dictionary<string, string>();
     }
 
 }

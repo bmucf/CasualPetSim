@@ -7,6 +7,7 @@ using UnityEngine;
 [System.Serializable]
 public class PetStatsData
 {
+
     // public string uniqueID;
     public string petName;
     public string typeName;

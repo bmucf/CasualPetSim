@@ -116,7 +116,9 @@ public class PetFactory : IDataPersistence
                 else
                     Debug.LogWarning($"Trait '{traitName}' not found in registry.");
             }
-            Debug.Log($"Loaded pet {pet.petName} with traits:");
+            
+            // Debug.Log($"Loaded pet {pet.petName} with traits:");
+            
             foreach (var t in traits)
             {
                 Debug.Log($" - {t.traitName}");

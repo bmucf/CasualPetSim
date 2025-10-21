@@ -1,5 +1,7 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
+using System.Xml;
 using UnityEngine;
 
 // ~ Istvan W
@@ -34,7 +36,7 @@ public class PetStat : MonoBehaviour, IDataPersistence
 
         dataPersistenceManager = DataPersistenceManager.instance;
 
-        LoadPetState();
+        // LoadPetState();
     }
 
     void Update()
@@ -42,7 +44,7 @@ public class PetStat : MonoBehaviour, IDataPersistence
         if (pet.hungerMain < 100 || pet.dirtinessMain < 100 || pet.sleepinessMain < 100 || pet.sadnessMain < 100)
         {
             pet.UpdateStats(Time.deltaTime);
-            Debug.Log("Stat update called.");
+            // Debug.Log("Stat update called.");
         }
 
         // ApplyStatEffects();
@@ -50,13 +52,64 @@ public class PetStat : MonoBehaviour, IDataPersistence
 
     public void LoadData(GameData data)
     {
-        this.lastSavedTime = data.lastSavedTime;
+        Debug.Log("PetStat LoadData Called");
+
+        if (pet == null)
+        {
+            pet = GetComponent<Pet>();
+            if (pet == null)
+            {
+                Debug.LogError("Pet reference is missing.");
+                return;
+            }
+        }
+
+        string petID = pet.UniqueID;
+
+        // Load per-pet time
+        if (!data.allPetLastSavedTimes.TryGetValue(petID, out string savedTimeStr))
+        {
+            Debug.Log($"No saved time found for pet '{petID}'. Using current time.");
+            savedTimeStr = DateTime.Now.ToString();
+            data.allPetLastSavedTimes[petID] = savedTimeStr;
+        }
+
+        if (!DateTime.TryParse(savedTimeStr, out DateTime lastTime))
+        {
+            Debug.LogWarning("Invalid lastSavedTime. Using current time.");
+            lastTime = DateTime.Now;
+        }
+
+        TimeSpan elapsed = DateTime.Now - lastTime;
+
+        SimulateOfflineProgress(elapsed.TotalSeconds, data);
     }
+
+
 
     public void SaveData(ref GameData data)
     {
-        data.lastSavedTime = DateTime.Now.ToString();
+        if (pet == null)
+        {
+            Debug.LogError("Pet reference is missing. Cannot save lastSavedTime.");
+            return;
+        }
+
+        if (data == null)
+        {
+            Debug.LogError("GameData reference is null in PetStat.SaveData!");
+            return;
+        }
+
+        if (data.allPetLastSavedTimes == null)
+        {
+            Debug.LogWarning("allPetLastSavedTimes dictionary is null. Initializing...");
+            data.allPetLastSavedTimes = new Dictionary<string, string>();
+        }
+
+        data.allPetLastSavedTimes[pet.UniqueID] = DateTime.Now.ToString();
     }
+
 
     void ApplyStatEffects()
     {
@@ -72,15 +125,13 @@ public class PetStat : MonoBehaviour, IDataPersistence
     // Load previous pet data
     void LoadPetState()
     {
-        if (dataPersistenceManager == null)
+        if (dataPersistenceManager == null || pet == null)
         {
-            Debug.LogError("DataPersistenceManager is not assigned.");
+            Debug.LogError("DataPersistenceManager or Pet reference is missing.");
             return;
         }
 
-        // TODO: Load from PlayerPrefs or JSON
         GameData loadedData = dataPersistenceManager.LoadData();
-
         if (loadedData == null)
         {
             Debug.LogError("Failed to load GameData.");
@@ -88,16 +139,18 @@ public class PetStat : MonoBehaviour, IDataPersistence
         }
 
         this.gameData = loadedData;
-        this.lastSavedTime = loadedData.lastSavedTime;
 
-        // Debug what's inside gameData after loading
-        /*
-        Debug.Log("=== GameData Debug ===");
-        Debug.Log($"lastSavedTime: {lastSavedTime}");
-        Debug.Log($"CurrentTime: {DateTime.Now}");
-        */
+        string petID = pet.UniqueID;
 
-        if (!DateTime.TryParse(lastSavedTime, out DateTime lastTime))
+        string savedTimeStr;
+        if (!loadedData.allPetLastSavedTimes.TryGetValue(petID, out savedTimeStr))
+        {
+            // Debug.Log($"No saved time found for pet '{petID}'. Using current time.");
+            savedTimeStr = DateTime.Now.ToString();
+            loadedData.allPetLastSavedTimes[petID] = savedTimeStr; // Optional: init the value
+        }
+
+        if (!DateTime.TryParse(savedTimeStr, out DateTime lastTime))
         {
             Debug.LogWarning("Invalid lastSavedTime. Using current time.");
             lastTime = DateTime.Now;
@@ -105,8 +158,10 @@ public class PetStat : MonoBehaviour, IDataPersistence
 
         TimeSpan elapsed = DateTime.Now - lastTime;
 
-        SimulateOfflineProgress(elapsed.TotalSeconds, gameData);
+        SimulateOfflineProgress(elapsed.TotalSeconds, loadedData);
     }
+
+
 
     // Save current pet data
     void SavePetState()

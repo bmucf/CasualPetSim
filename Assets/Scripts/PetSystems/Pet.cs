@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
 using UnityEngine.Windows;
@@ -45,24 +46,34 @@ public abstract class Pet : MonoBehaviour, IDataPersistence
             return;
         }
 
+        if (data == null)
+        {
+            Debug.LogError("GameData is null in Pet.SaveData!");
+            return;
+        }
+
+        if (data.allPetStats == null)
+        {
+            Debug.LogWarning("allPetStats dictionary is null, initializing...");
+            data.allPetStats = new Dictionary<string, PetStatsData>();
+        }
+
         PetStatsData stats = new PetStatsData
         {
-            // uniqueID = uniqueID,
             petName = petName,
             typeName = typeName,
-
             hungerMain = hungerMain,
             dirtinessMain = dirtinessMain,
             sadnessMain = sadnessMain,
             sleepinessMain = sleepinessMain
-
         };
 
         data.allPetStats[uniqueID] = stats;
     }
 
-   
- 
+
+
+
     [SerializeField] private string uniqueID;
     public string UniqueID => uniqueID;
 
