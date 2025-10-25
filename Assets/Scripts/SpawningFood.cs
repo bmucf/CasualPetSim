@@ -1,72 +1,112 @@
-using System.Collections;
-using TMPro;
 using UnityEngine;
+using TMPro;
 
 public class SpawningFood : MonoBehaviour
 {
-    private UI uiManager;
-    public GameObject food;
-    public int foodCount;
-    private float xRange = 1;
-    private Vector3 spawnPos;
-    public float spawnDelay;
-    public float spawnRate;
-    public TextMeshProUGUI foodScore;
-    public float mgTimer;
-    public TextMeshProUGUI foodTimer;
-    public GameObject foodCamera;
-    public GameObject mainCamera;
-    public GameObject bowl;
+    public RoomUIManager uiManager;
 
-    
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
+    public GameObject food;
+    public float spawnDelay = 0.5f;
+    public float spawnRate = 0.5f;
+    public float xRange = 1f;
+
+    public int foodCount;
+    public float mgTimer = 10f;
+
+    public TextMeshProUGUI foodScore;
+    public TextMeshProUGUI foodTimer;
+
+    Vector3 spawnPos;
+    bool spawningActive = false;
+
     void Start()
     {
-        uiManager = GameObject.Find("UIManager").GetComponent<UI>();
-        InvokeRepeating("BeginFoodSpawn", spawnDelay, spawnRate);
-        
+        if (uiManager == null)
+            uiManager = FindObjectOfType<RoomUIManager>();
+
+        InvokeRepeating(nameof(BeginFoodSpawn), spawnDelay, spawnRate);
+
+        spawningActive = false;
+        ResetUIForStart();
     }
 
-    // Update is called once per frame
     void Update()
     {
-        if (uiManager.minigameHasStarted)
+        if (uiManager != null && uiManager.minigameHasStarted)
         {
-            mgTimer -= Time.deltaTime;
-            foodTimer.text = "Time: " + mgTimer;
-            if (mgTimer <= 0 || foodCount >= 10)
-            {
-                uiManager.minigameHasStarted = false;
-                foodCount = 0;
-                uiManager.mainHUD.SetActive(true);
-                uiManager.eatMinigame.SetActive(false);
-                mgTimer = 10;
-                foodCamera.SetActive(false);
-                mainCamera.SetActive(true);
-                bowl.SetActive(false);
-            }
+            spawningActive = true;
 
+            mgTimer -= Time.deltaTime;
+
+            if (foodTimer != null)
+                foodTimer.text = "Time: " + Mathf.CeilToInt(mgTimer);
+
+            if (mgTimer <= 0f || foodCount >= 10)
+            {
+                EndMinigame();
+            }
+        }
+        else
+        {
+            spawningActive = false;
         }
     }
 
-    private void BeginFoodSpawn()
+    void BeginFoodSpawn()
     {
-        {
-            if (uiManager.minigameHasStarted)
-            {
-                spawnPos = new Vector3(Random.Range(-xRange,xRange), 5, 0);
-                Instantiate(food, spawnPos, Quaternion.identity);
-                
-            }
-           
-        }
+        if (!spawningActive || food == null) return;
+
+        spawnPos = new Vector3(Random.Range(-xRange, xRange), 5f, 0f);
+        Instantiate(food, spawnPos, Quaternion.identity);
     }
 
     public void UpdateScore()
     {
         foodCount++;
-        foodScore.text = "Food Score: " + foodCount + " / 10";
+
+        if (foodScore != null)
+            foodScore.text = "Food Score: " + foodCount + " / 10";
     }
 
+    void ResetUIForStart()
+    {
+        if (foodScore != null)
+            foodScore.text = "Food Score: " + foodCount + " / 10";
 
+        if (foodTimer != null)
+            foodTimer.text = "Time: " + Mathf.CeilToInt(mgTimer);
+    }
+
+    void ApplyFeedingRewardToPet()
+    {
+        Pet pet = FindObjectOfType<Pet>();
+        if (pet == null) return;
+
+        float hungerReducePerFood = 5f;
+        float totalReduce = foodCount * hungerReducePerFood;
+
+        pet.hungerMain = Mathf.Max(0f, pet.hungerMain - totalReduce);
+    }
+
+    void EndMinigame()
+    {
+        spawningActive = false;
+
+        ApplyFeedingRewardToPet();
+
+        mgTimer = 10f;
+        foodCount = 0;
+        ResetUIForStart();
+
+        if (uiManager != null)
+            uiManager.ExitFeedingMinigame();
+    }
+
+    public void BeginMinigameRound()
+    {
+        spawningActive = true;
+        mgTimer = 10f;
+        foodCount = 0;
+        ResetUIForStart();
+    }
 }
