@@ -8,6 +8,8 @@ public class UI : MonoBehaviour
     public GameObject settingsMenu;
     public GameObject shopMenu;
     public GameObject eatMinigame;
+    public GameObject bathMinigame;
+    public GameObject bathRocko;
     public bool gameIsPaused;
     public AudioSource musicSource;
     public AudioSource sfxSource;
@@ -75,7 +77,13 @@ public class UI : MonoBehaviour
         mainCamera.SetActive(false);
         foodCamera.SetActive(true);
         bowl.SetActive(true);
-        
+    }
+
+    public void BathMinigame()
+    {
+        minigameHasStarted = true;
+        mainHUD.SetActive(false);
+        bathRocko.SetActive(true);
     }
 
     public void ToggleMusic()
