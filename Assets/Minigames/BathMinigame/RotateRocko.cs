@@ -4,6 +4,8 @@ public class RotateRocko : MonoBehaviour
 {
     public float rotationSpeed = 50f;
 
+    public Transform target;
+
 
     void Start()
     {
@@ -16,7 +18,8 @@ public class RotateRocko : MonoBehaviour
         {
             Touch touch = Input.GetTouch(0);
             float touchDeltaX = touch.deltaPosition.x;
-            transform.Rotate(0, -touchDeltaX * rotationSpeed * Time.deltaTime, 0);
+            transform.RotateAround(target.position, Vector3.up, -touchDeltaX * rotationSpeed * Time.deltaTime);
+
         }
     }
 }
