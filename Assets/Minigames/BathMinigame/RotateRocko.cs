@@ -6,6 +6,8 @@ public class RotateRocko : MonoBehaviour
 
     public Transform target;
 
+    public SwipeRocko swipeRocko;
+
 
     void Start()
     {
@@ -14,7 +16,7 @@ public class RotateRocko : MonoBehaviour
 
     void Update() 
     {
-        if (Input.touchCount > 0)
+        if (Input.touchCount > 0 && !swipeRocko.scrubRocko)
         {
             Touch touch = Input.GetTouch(0);
             float touchDeltaX = touch.deltaPosition.x;
