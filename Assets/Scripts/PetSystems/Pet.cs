@@ -60,7 +60,7 @@ public abstract class Pet : MonoBehaviour, IDataPersistence
         }
 
         // Add unique ID to list
-        data.AddPetID(uniqueID);
+        // data.AddPetID(uniqueID);
 
         PetStatsData stats = new PetStatsData
         {
@@ -123,8 +123,10 @@ public abstract class Pet : MonoBehaviour, IDataPersistence
 
     protected virtual void Awake()
     {
+        /*
         if (string.IsNullOrEmpty(uniqueID))
             uniqueID = Guid.NewGuid().ToString();
+        */
     }
 
     public void UpdateStats(float time)
@@ -173,11 +175,16 @@ public abstract class Pet : MonoBehaviour, IDataPersistence
         sadnessMain = def.defaultSadness;
         sleepinessMain = def.defaultSleepiness;
     }
-    public void SetUniqueID(string id)
+    public void SetUniqueID(string ID)
     {
-        if (!string.IsNullOrEmpty(id))
+        if (!string.IsNullOrEmpty(ID))
         {
-            uniqueID = id;
+            uniqueID = ID;
+        }
+        else
+        {
+            uniqueID = Guid.NewGuid().ToString();
+            Debug.Log("No ID found. Generating new ID.");
         }
     }
 

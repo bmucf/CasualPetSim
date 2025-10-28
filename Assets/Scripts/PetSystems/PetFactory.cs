@@ -14,7 +14,7 @@ using UnityEngine;
  * It should run a check to see if atleast one pet object has been made.
  * If not, create a new starting pet 'Rocko'
 */
-public class PetFactory : IDataPersistence
+public class PetFactory
 {
     // TODO - Finish the pet creation using a dictionary to store the information
 
@@ -26,7 +26,8 @@ public class PetFactory : IDataPersistence
     = new Dictionary<string, (Pet, List<TraitDefinition>)>();
 
     private readonly Dictionary<string, GameObject> petPrefabs;
-
+    
+    GameData data = DataPersistenceManager.instance.GetGameData();
 
     [Serializable]
     public class PetData
@@ -74,59 +75,58 @@ public class PetFactory : IDataPersistence
 
 
     // ---------------- LOAD ----------------
-    public void LoadData(GameData data)
+    public Pet LoadPet(string ID)
     {
-        petDict.Clear();
+        Pet pet = null;
+        PetStatsData stats = data.allPetStats[ID];
 
-        foreach (var kvp in data.allPetStats)
+        if (!registry.TryGet(stats.typeName, out PetTypeDefinition def))
         {
-            PetStatsData stats = kvp.Value;
-
-            if (!registry.TryGet(stats.typeName, out PetTypeDefinition def))
-            {
-                Debug.LogError($"No PetTypeDefinition found for {stats.typeName}");
-                continue;
-            }
-
+            Debug.LogError($"No PetTypeDefinition found for {stats.typeName}");
+        }
+        else
+        {
             GameObject go = GameObject.Instantiate(def.prefab);
-            Pet pet = go.GetComponent<Pet>();
+            pet = go.GetComponent<Pet>();
 
             if (pet == null)
             {
                 Debug.LogError($"Prefab for {stats.typeName} missing Pet component.");
-                continue;
             }
-
-            // Restore identity
-            pet.SetUniqueID(kvp.Key);
-            pet.Initialize(stats.typeName, stats.petName);
-
-            // Restore stats
-            pet.hungerMain = stats.hungerMain;
-            pet.dirtinessMain = stats.dirtinessMain;
-            pet.sadnessMain = stats.sadnessMain;
-            pet.sleepinessMain = stats.sleepinessMain;
-
-            // Restore traits
-            List<TraitDefinition> traits = new();
-            foreach (string traitName in stats.traitNames)
+            else
             {
-                if (traitRegistry.TryGet(traitName, out TraitDefinition trait))
-                    traits.Add(trait);
-                else
-                    Debug.LogWarning($"Trait '{traitName}' not found in registry.");
-            }
-            
-            // Debug.Log($"Loaded pet {pet.petName} with traits:");
-            
-            foreach (var t in traits)
-            {
-                Debug.Log($" - {t.traitName}");
-            }
+                // Set ID to pet object
+                pet.SetUniqueID(ID);
 
-            // Register in dictionary
-            petDict[pet.UniqueID] = (pet, traits);
+                // Apply loaded stats into Pet object
+                pet.petName = stats.petName;
+                pet.typeName = stats.typeName;
+                pet.hungerMain = stats.hungerMain;
+                pet.dirtinessMain = stats.dirtinessMain;
+                pet.sadnessMain = stats.sadnessMain;
+                pet.sleepinessMain = stats.sleepinessMain;
+
+                // Restore traits
+                List<TraitDefinition> traits = new();
+                foreach (string traitName in stats.traitNames)
+                {
+                    if (traitRegistry.TryGet(traitName, out TraitDefinition trait))
+                        traits.Add(trait);
+                    else
+                        Debug.LogWarning($"Trait '{traitName}' not found in registry.");
+                }
+                if (traits.Count > 0)
+                    // Debug.Log($"Loaded pet {data.allPetStats[ID].petName}, (ID = {ID}), with traits:");
+                    foreach (var t in traits)
+                    {
+                        Debug.Log($" - {t.traitName}");
+                    }
+            }
+            go.SetActive(false);
+
+            Debug.Log($"{ID}: {pet.petName}, {pet.typeName}, {pet.hungerMain}, {pet.dirtinessMain}, {pet.sadnessMain}, {pet.sleepinessMain}");
         }
+        return pet;
     }
 
     public PetFactory(PetTypeRegistrySO registry, TraitRegistrySO traitRegistry)
@@ -211,7 +211,7 @@ public class PetFactory : IDataPersistence
 
 
         // Register in dictionary
-        petDict[pet.UniqueID] = (pet, traits);
+        // petDict[pet.UniqueID] = (pet, traits);
 
         return pet;
     }

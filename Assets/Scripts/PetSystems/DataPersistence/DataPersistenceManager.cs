@@ -70,7 +70,7 @@ public class DataPersistenceManager : MonoBehaviour
     public void NewGame()
     {
         this.gameData = new GameData();
-        // Debug.Log("New game initialized");
+        Debug.Log("New game initialized");
     }
 
     public void SaveGame()
@@ -92,8 +92,6 @@ public class DataPersistenceManager : MonoBehaviour
     public GameData LoadData()
     {
         this.dataPersistenceObjects = FindAllDataPersistenceObjects();
-
-        Debug.Log($"Found {dataPersistenceObjects.Count} IDataPersistence objects on load.");
 
         // load any saved data from a file using the data handler
         if (dataHandler == null)
@@ -133,6 +131,7 @@ public class DataPersistenceManager : MonoBehaviour
                 }
             }
         }
+        Debug.Log($"Found {dataPersistenceObjects.Count} IDataPersistence objects on load.");
 
         return gameData;
     }
