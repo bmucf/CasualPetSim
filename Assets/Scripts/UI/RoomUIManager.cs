@@ -1,178 +1,160 @@
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class RoomUIManager : MonoBehaviour
 {
-    public bool gameIsPaused = false;
-    public bool minigameHasStarted = false;
-    public bool musicIsMuted = false;
-    public bool sfxIsMuted = false;
+    [Header("Main UI Groups")]
+    public GameObject mainHUD;              // normal HUD
+    public GameObject feedingMinigameRoot;  // minigame world objs
+    public GameObject feedingHUDCanvas;     // minigame HUD
 
-    public GameObject mainHUD;
-    public GameObject feedingMinigameRoot;
-    public GameObject feedingSpawner;
+    [Header("Popups")]
+    public GameObject shopPopup;
+    public GameObject settingsPopup;
+    public GameObject inventoryPopup;       // NEW: inventory panel (Popup_Inventory)
+
+    [Header("Minigame Components")]
     public GameObject bowlObject;
-    public GameObject feedingHUDCanvas;
-
-    public GameObject popupSettings;
-    public GameObject popupShop;
-
     public GameObject mainCamera;
     public GameObject feedingCamera;
+    public SpawningFood feedingSpawner;
 
-    public AudioSource musicSource;
-    public AudioSource sfxSource;
-
-    public RoomUI popupController;
+    [HideInInspector] public bool minigameHasStarted = false;
 
     void Start()
     {
-        EnterMainRoomMode();
-    }
-
-    void EnterMainRoomMode()
-    {
-        minigameHasStarted = false;
-        Time.timeScale = 1f;
-
+        // default state
         if (mainHUD != null) mainHUD.SetActive(true);
-
         if (feedingMinigameRoot != null) feedingMinigameRoot.SetActive(false);
-        if (feedingSpawner != null) feedingSpawner.SetActive(false);
-        if (bowlObject != null) bowlObject.SetActive(false);
+        if (feedingHUDCanvas != null) feedingHUDCanvas.SetActive(false);
+
+        if (shopPopup != null) shopPopup.SetActive(false);
+        if (settingsPopup != null) settingsPopup.SetActive(false);
+        if (inventoryPopup != null) inventoryPopup.SetActive(false);
 
         if (mainCamera != null) mainCamera.SetActive(true);
         if (feedingCamera != null) feedingCamera.SetActive(false);
-
-        if (popupController != null)
-        {
-            popupController.CloseAll();
-        }
-        else
-        {
-            if (popupSettings != null) popupSettings.SetActive(false);
-            if (popupShop != null) popupShop.SetActive(false);
-        }
+        if (bowlObject != null) bowlObject.SetActive(false);
     }
 
-    public void OpenSettings()
-    {
-        if (popupController != null && popupSettings != null)
-        {
-            popupController.Open(popupSettings);
-        }
-        else if (popupSettings != null)
-        {
-            popupSettings.SetActive(true);
-        }
-    }
-
-    public void CloseSettings()
-    {
-        if (popupController != null)
-        {
-            popupController.CloseAll();
-        }
-        else if (popupSettings != null)
-        {
-            popupSettings.SetActive(false);
-        }
-    }
+    // ---------- OPEN / CLOSE POPUPS ----------
 
     public void OpenShop()
     {
-        if (popupController != null && popupShop != null)
-        {
-            popupController.Open(popupShop);
-        }
-        else if (popupShop != null)
-        {
-            popupShop.SetActive(true);
-        }
+        CloseAllPopups();
+        if (shopPopup != null) shopPopup.SetActive(true);
+        if (mainHUD != null) mainHUD.SetActive(false);
     }
 
     public void CloseShop()
     {
-        if (popupController != null)
-        {
-            popupController.CloseAll();
-        }
-        else if (popupShop != null)
-        {
-            popupShop.SetActive(false);
-        }
+        if (shopPopup != null) shopPopup.SetActive(false);
+        if (!minigameHasStarted && mainHUD != null) mainHUD.SetActive(true);
     }
 
-    public void TogglePause()
+    public void OpenSettings()
     {
-        gameIsPaused = !gameIsPaused;
-        Time.timeScale = gameIsPaused ? 0f : 1f;
+        CloseAllPopups();
+        if (settingsPopup != null) settingsPopup.SetActive(true);
+        if (mainHUD != null) mainHUD.SetActive(false);
     }
 
-    public void ToggleMusic()
+    public void CloseSettings()
     {
-        musicIsMuted = !musicIsMuted;
+        if (settingsPopup != null) settingsPopup.SetActive(false);
+        if (!minigameHasStarted && mainHUD != null) mainHUD.SetActive(true);
+    }
 
-        if (musicSource != null)
+    // NEW: Inventory popup
+    public void OpenInventory()
+    {
+        CloseAllPopups();
+        if (inventoryPopup != null)
         {
-            musicSource.mute = musicIsMuted;
-            if (!musicIsMuted && !musicSource.isPlaying)
+            // show inventory
+            inventoryPopup.SetActive(true);
+
+            // update counts in UI
+            var invUI = inventoryPopup.GetComponent<InventoryPanelUI>();
+            if (invUI != null)
             {
-                musicSource.Play();
+                invUI.Refresh();
             }
         }
+
+        if (mainHUD != null) mainHUD.SetActive(false);
     }
 
-    public void ToggleSFX()
+    public void CloseInventory()
     {
-        sfxIsMuted = !sfxIsMuted;
-
-        if (sfxSource != null)
-        {
-            sfxSource.mute = sfxIsMuted;
-            if (!sfxIsMuted && !sfxSource.isPlaying)
-            {
-                sfxSource.Play();
-            }
-        }
+        if (inventoryPopup != null) inventoryPopup.SetActive(false);
+        if (!minigameHasStarted && mainHUD != null) mainHUD.SetActive(true);
     }
+
+    // close everything popup-like
+    public void CloseAllPopups()
+    {
+        if (shopPopup != null) shopPopup.SetActive(false);
+        if (settingsPopup != null) settingsPopup.SetActive(false);
+        if (inventoryPopup != null) inventoryPopup.SetActive(false);
+    }
+
+    // ---------- MINIGAME CONTROL ----------
 
     public void StartFeedingMinigame()
     {
         minigameHasStarted = true;
 
+        // hide UI popups
+        CloseAllPopups();
+
+        // hide normal HUD
         if (mainHUD != null) mainHUD.SetActive(false);
 
+        // enable minigame world + HUD
         if (feedingMinigameRoot != null) feedingMinigameRoot.SetActive(true);
+        if (feedingHUDCanvas != null) feedingHUDCanvas.SetActive(true);
 
-        if (feedingSpawner != null) feedingSpawner.SetActive(true);
-
+        // camera swap
         if (mainCamera != null) mainCamera.SetActive(false);
         if (feedingCamera != null) feedingCamera.SetActive(true);
 
+        // bowl + spawner ON
         if (bowlObject != null) bowlObject.SetActive(true);
-
-        if (feedingHUDCanvas != null) feedingHUDCanvas.SetActive(true);
-
-        if (popupController != null) popupController.CloseAll();
+        // feedingSpawner should already be in scene and start doing its job
     }
 
     public void ExitFeedingMinigame()
     {
         minigameHasStarted = false;
 
-        if (mainHUD != null) mainHUD.SetActive(true);
-
+        // turn off minigame world + HUD
         if (feedingMinigameRoot != null) feedingMinigameRoot.SetActive(false);
+        if (feedingHUDCanvas != null) feedingHUDCanvas.SetActive(false);
 
-        if (feedingSpawner != null) feedingSpawner.SetActive(false);
-
+        // cameras back
         if (mainCamera != null) mainCamera.SetActive(true);
         if (feedingCamera != null) feedingCamera.SetActive(false);
 
+        // bowl OFF
         if (bowlObject != null) bowlObject.SetActive(false);
 
-        if (feedingHUDCanvas != null) feedingHUDCanvas.SetActive(false);
+        // popups stay closed
+        CloseAllPopups();
+
+        // normal HUD back
+        if (mainHUD != null) mainHUD.SetActive(true);
     }
 
+   
+    public void GoToBathScene(string sceneName)
+    {
+        Time.timeScale = 1;
+
+        CloseAllPopups();
+        if (mainHUD != null) mainHUD.SetActive(false);
+
+        SceneManager.LoadScene(sceneName);
+    }
 
 }
