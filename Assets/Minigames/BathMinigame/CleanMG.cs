@@ -25,3 +25,4 @@ public class CleanMG : MonoBehaviour
         pet.dirtinessMain = Mathf.Max(0f, pet.dirtinessMain - 30f);
     }
 }
+
