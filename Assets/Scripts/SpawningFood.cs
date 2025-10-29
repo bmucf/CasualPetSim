@@ -17,6 +17,7 @@ public class SpawningFood : MonoBehaviour
     public GameObject foodCamera;
     public GameObject mainCamera;
     public GameObject bowl;
+    public Pet pet;
 
     
     // Start is called once before the first execution of Update after the MonoBehaviour is created
@@ -44,6 +45,11 @@ public class SpawningFood : MonoBehaviour
                 foodCamera.SetActive(false);
                 mainCamera.SetActive(true);
                 bowl.SetActive(false);
+
+                if (foodCount >= 10)
+                {
+                    pet.hungerMain += 50f;
+                }
             }
 
         }
