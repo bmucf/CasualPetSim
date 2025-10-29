@@ -9,21 +9,37 @@ using UnityEngine.Windows;
 [System.Serializable]
 public class GameData
 {
-    // What is being saved
+    /// <summary>
+    /// What is being saved
+    /// </summary>
     // Ex: Current Stats, Clothes, Equipment, Currency
-    public string lastSavedTime;
 
-    public Dictionary<string, PetStatsData> allPetStats;
+    // Unique ID list
+    public List<string> petIDList;
+
+    // Unique ID is dictionary key
+    public Dictionary<string, PetStatsData> allPetStats; // Name, Type, Stats, and Traits
+    public Dictionary<string, string> allPetLastSavedTimes; // Last saved time
 
 
     // the values defined in this constructor will be the default values
     // the game starts with when there's no data to Load
 
+    public void AddPetID(string uniqueID)
+    {
+        if (!petIDList.Contains(uniqueID))
+        {
+            petIDList.Add(uniqueID);
+        }
+    }
+
     // Initialize references
     public GameData()
     {
-        this.lastSavedTime = DateTime.Now.ToString(); // ISO 8601 format
+        petIDList = new List<string>();
+        allPetLastSavedTimes = new Dictionary<string, string>();
         allPetStats = new Dictionary<string, PetStatsData>();
+
     }
 
 }

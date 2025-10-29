@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
 using UnityEngine.Windows;
@@ -15,6 +16,7 @@ public abstract class Pet : MonoBehaviour, IDataPersistence
 
     public void LoadData(GameData data)
     {
+        
         if (string.IsNullOrEmpty(uniqueID))
         {
             Debug.LogError("Pet uniqueID is empty! Cannot load.");
@@ -30,6 +32,8 @@ public abstract class Pet : MonoBehaviour, IDataPersistence
             dirtinessMain = stats.dirtinessMain;
             sadnessMain = stats.sadnessMain;
             sleepinessMain = stats.sleepinessMain;
+
+            traitNames = stats.traitNames;
         }
         else
         {
@@ -45,30 +49,50 @@ public abstract class Pet : MonoBehaviour, IDataPersistence
             return;
         }
 
-        PetStatsData stats = new PetStatsData
+        if (data == null)
         {
-            uniqueID = uniqueID,
+            Debug.LogError("GameData is null in Pet.SaveData!");
+            return;
+        }
+
+        if (data.allPetStats == null)
+        {
+            Debug.LogWarning("allPetStats dictionary is null, initializing...");
+            data.allPetStats = new Dictionary<string, PetStatsData>();
+        }
+
+        // Add unique ID to list
+        data.AddPetID(uniqueID);
+
+        PetStatsData stats = new()
+        {
             petName = petName,
             typeName = typeName,
 
             hungerMain = hungerMain,
             dirtinessMain = dirtinessMain,
             sadnessMain = sadnessMain,
-            sleepinessMain = sleepinessMain
+            sleepinessMain = sleepinessMain,
 
+            traitNames = traitNames
         };
 
         data.allPetStats[uniqueID] = stats;
     }
 
-   
- 
+
+
+
     [SerializeField] private string uniqueID;
     public string UniqueID => uniqueID;
 
     public virtual string petName { get; set; }
 
     public string typeName;
+
+    public List<TraitDefinition> traitList;
+    [HideInInspector] 
+    public List<string> traitNames;
 
 
     // Main stats - Starting Values
@@ -106,11 +130,6 @@ public abstract class Pet : MonoBehaviour, IDataPersistence
     // Debug Variables
     private int rateOfChange = 100; // Use to speed up growth/decay rates
 
-    protected virtual void Awake()
-    {
-        if (string.IsNullOrEmpty(uniqueID))
-            uniqueID = Guid.NewGuid().ToString();
-    }
 
     public void UpdateStats(float time)
     {
@@ -151,18 +170,16 @@ public abstract class Pet : MonoBehaviour, IDataPersistence
             uniqueID = Guid.NewGuid().ToString();
     }
 
-    public void ApplyDefaults(PetTypeDefinition def)
+    public void SetUniqueID(string ID)
     {
-        hungerMain = def.defaultHunger;
-        dirtinessMain = def.defaultDirtiness;
-        sadnessMain = def.defaultSadness;
-        sleepinessMain = def.defaultSleepiness;
-    }
-    public void SetUniqueID(string id)
-    {
-        if (!string.IsNullOrEmpty(id))
+        if (!string.IsNullOrEmpty(ID))
         {
-            uniqueID = id;
+            uniqueID = ID;
+        }
+        else
+        {
+            uniqueID = Guid.NewGuid().ToString();
+            Debug.Log("No ID found. Generating new ID.");
         }
     }
 

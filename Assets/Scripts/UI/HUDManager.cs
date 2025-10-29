@@ -31,7 +31,7 @@ public class HUDManager : MonoBehaviour
             sleepinessSlider.value = Quantize(pet.sleepinessMain);
     }
 
-    // Helper: snap 0–100 stat into steps, then normalize 0–1
+    // Helper: snap 0?00 stat into steps, then normalize 0?
     private float Quantize(float statValue)
     {
         // snap to nearest multiple of stepSize

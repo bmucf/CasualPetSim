@@ -12,4 +12,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f5932702997f37b43b67d6db8ce822fe, type: 3}
   m_Name: TraitRegistrySO
   m_EditorClassIdentifier: Assembly-CSharp::TraitRegistrySO
-  traits: []
+  traits:
+  - {fileID: 11400000, guid: 1186a65e742eb4d4fb3e0b643d10047d, type: 2}
+  - {fileID: 11400000, guid: 85bb24799f9ec054d888fcc694fad0d3, type: 2}
+  - {fileID: 11400000, guid: f86e9c5eca6392a4cb3878be25d08322, type: 2}
+  - {fileID: 11400000, guid: 2464b512c8a362f4aa9415219033fd0a, type: 2}
+  - {fileID: 11400000, guid: 156725256f1597b4a9459fde7448004f, type: 2}
+  - {fileID: 11400000, guid: fb525b4546d4e18428799408043267cb, type: 2}
+  - {fileID: 11400000, guid: abaa444925f5a704b9c09fbbede0c728, type: 2}
+  - {fileID: 11400000, guid: 91d110e4a27d41549b7d77ad934b0eb8, type: 2}
