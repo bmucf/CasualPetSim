@@ -60,7 +60,7 @@ public abstract class Pet : MonoBehaviour, IDataPersistence
         }
 
         // Add unique ID to list
-        // data.AddPetID(uniqueID);
+        data.AddPetID(uniqueID);
 
         PetStatsData stats = new PetStatsData
         {

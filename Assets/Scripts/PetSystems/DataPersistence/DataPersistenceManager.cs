@@ -19,7 +19,7 @@ public class DataPersistenceManager : MonoBehaviour
     [Header("File Storage Config")]
     [SerializeField] private string fileName;
 
-    private GameData gameData;
+    private GameData data;
     private List<IDataPersistence> dataPersistenceObjects;
 
     private FileDataHandler dataHandler;
@@ -47,12 +47,13 @@ public class DataPersistenceManager : MonoBehaviour
         }
 
         this.dataHandler = new FileDataHandler(Application.persistentDataPath, fileName);
-        gameData = LoadData() ?? new GameData();
+        data = LoadData() ?? new GameData();
     }
 
 
     private void Start()
     {
+
         // LoadData();
     }
     private void OnApplicationQuit()
@@ -62,14 +63,14 @@ public class DataPersistenceManager : MonoBehaviour
         // Debug.Log($"Found {dataPersistenceObjects.Count} IDataPersistence objects on quit.");
         // Debug.Log($"Saving info to '{fileName}'.");
 
-        Debug.Log($"Saving game, GameData is null? {gameData == null}");
+        Debug.Log($"Saving game, GameData is null? {data == null}");
 
         SaveGame();
     }
 
     public void NewGame()
     {
-        this.gameData = new GameData();
+        this.data = new GameData();
         Debug.Log("New game initialized");
     }
 
@@ -78,11 +79,11 @@ public class DataPersistenceManager : MonoBehaviour
         {
             foreach (IDataPersistence dataPersistenceObj in dataPersistenceObjects)
             {
-                dataPersistenceObj.SaveData(ref gameData);
+                dataPersistenceObj.SaveData(ref data);
             }
         }
         // save that data to a file using the data handler
-        dataHandler.Save(gameData);
+        dataHandler.Save(data);
 
 
 
@@ -99,9 +100,9 @@ public class DataPersistenceManager : MonoBehaviour
             Debug.LogError("dataHandler is null before calling Load(). Check initialization in Start().");
         }
 
-        this.gameData = dataHandler?.Load();
+        this.data = dataHandler?.Load();
 
-        if (this.gameData == null)
+        if (this.data == null)
         {
             Debug.LogWarning("No data was found. Initialing data to defaults.");
             NewGame();
@@ -122,7 +123,7 @@ public class DataPersistenceManager : MonoBehaviour
             {
                 try
                 {
-                    dataPersistenceObj.LoadData(gameData);
+                    dataPersistenceObj.LoadData(data);
                     Debug.Log($"Loaded IDataPersistence: {dataPersistenceObj.GetType().Name}");
                 }
                 catch (Exception ex)
@@ -133,7 +134,7 @@ public class DataPersistenceManager : MonoBehaviour
         }
         Debug.Log($"Found {dataPersistenceObjects.Count} IDataPersistence objects on load.");
 
-        return gameData;
+        return data;
     }
 
 
@@ -147,7 +148,7 @@ public class DataPersistenceManager : MonoBehaviour
 
     public GameData GetGameData()
     {
-        return this.gameData;
+        return this.data;
     }
 
 }
