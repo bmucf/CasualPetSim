@@ -19,7 +19,7 @@ public class DataPersistenceManager : MonoBehaviour
     [Header("File Storage Config")]
     [SerializeField] private string fileName;
 
-    private GameData gameData;
+    private GameData data;
     private List<IDataPersistence> dataPersistenceObjects;
 
     private FileDataHandler dataHandler;
@@ -34,45 +34,38 @@ public class DataPersistenceManager : MonoBehaviour
             Destroy(gameObject);
             return;
         }
-        /*    
-        this.dataHandler = new FileDataHandler(Application.persistentDataPath, fileName);
-        this.dataPersistenceObjects = FindAllDataPersistenceObjects();
-        */
         instance = this;
 
-
-        if (fileName == null || fileName == "")
+        if (string.IsNullOrEmpty(fileName))
         {
             Debug.LogWarning("File name is empty!");
             fileName = "Test.json";
         }
-        else 
+        else
         {
             Debug.Log($"The file name is '{fileName}'");
         }
-            
 
-    }
-
-    private void Start()
-    {
         this.dataHandler = new FileDataHandler(Application.persistentDataPath, fileName);
-
-        // LoadData();
+        data = LoadData() ?? new GameData();
     }
+
     private void OnApplicationQuit()
     {
         this.dataPersistenceObjects = FindAllDataPersistenceObjects();
 
         // Debug.Log($"Found {dataPersistenceObjects.Count} IDataPersistence objects on quit.");
         // Debug.Log($"Saving info to '{fileName}'.");
+
+        // Debug.Log($"Saving game, GameData is null? {data == null}");
+
         SaveGame();
     }
 
     public void NewGame()
     {
-        this.gameData = new GameData();
-        // Debug.Log("New game initialized");
+        this.data = new GameData();
+        Debug.Log("New game initialized");
     }
 
     public void SaveGame()
@@ -80,11 +73,11 @@ public class DataPersistenceManager : MonoBehaviour
         {
             foreach (IDataPersistence dataPersistenceObj in dataPersistenceObjects)
             {
-                dataPersistenceObj.SaveData(ref gameData);
+                dataPersistenceObj.SaveData(ref data);
             }
         }
         // save that data to a file using the data handler
-        dataHandler.Save(gameData);
+        dataHandler.Save(data);
 
 
 
@@ -95,17 +88,15 @@ public class DataPersistenceManager : MonoBehaviour
     {
         this.dataPersistenceObjects = FindAllDataPersistenceObjects();
 
-        // Debug.Log($"Found {dataPersistenceObjects.Count} IDataPersistence objects on load.");
-
         // load any saved data from a file using the data handler
         if (dataHandler == null)
         {
             Debug.LogError("dataHandler is null before calling Load(). Check initialization in Start().");
         }
 
-        this.gameData = dataHandler?.Load();
+        this.data = dataHandler?.Load();
 
-        if (this.gameData == null)
+        if (this.data == null)
         {
             Debug.LogWarning("No data was found. Initialing data to defaults.");
             NewGame();
@@ -126,7 +117,7 @@ public class DataPersistenceManager : MonoBehaviour
             {
                 try
                 {
-                    dataPersistenceObj.LoadData(gameData);
+                    dataPersistenceObj.LoadData(data);
                     Debug.Log($"Loaded IDataPersistence: {dataPersistenceObj.GetType().Name}");
                 }
                 catch (Exception ex)
@@ -135,8 +126,9 @@ public class DataPersistenceManager : MonoBehaviour
                 }
             }
         }
+        Debug.Log($"Found {dataPersistenceObjects.Count} IDataPersistence objects on load.");
 
-        return gameData;
+        return data;
     }
 
 
@@ -147,6 +139,10 @@ public class DataPersistenceManager : MonoBehaviour
 
         return dataPersistences.ToList();
     }
- 
+
+    public GameData GetGameData()
+    {
+        return this.data;
+    }
 
 }

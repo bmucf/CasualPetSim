@@ -1,5 +1,7 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
+using System.Xml;
 using UnityEngine;
 
 // ~ Istvan W
@@ -18,9 +20,6 @@ public class PetStat : MonoBehaviour, IDataPersistence
 
     public DataPersistenceManager dataPersistenceManager;
 
-    private string lastSavedTime;
-
-
     void Start()
     {
         if (pet == null)
@@ -33,8 +32,6 @@ public class PetStat : MonoBehaviour, IDataPersistence
         }
 
         dataPersistenceManager = DataPersistenceManager.instance;
-
-        LoadPetState();
     }
 
     void Update()
@@ -42,7 +39,7 @@ public class PetStat : MonoBehaviour, IDataPersistence
         if (pet.hungerMain < 100 || pet.dirtinessMain < 100 || pet.sleepinessMain < 100 || pet.sadnessMain < 100)
         {
             pet.UpdateStats(Time.deltaTime);
-            Debug.Log("Stat update called.");
+            // Debug.Log("Stat update called.");
         }
 
         // ApplyStatEffects();
@@ -50,54 +47,29 @@ public class PetStat : MonoBehaviour, IDataPersistence
 
     public void LoadData(GameData data)
     {
-        this.lastSavedTime = data.lastSavedTime;
-    }
+        Debug.Log("PetStat LoadData Called");
 
-    public void SaveData(ref GameData data)
-    {
-        data.lastSavedTime = DateTime.Now.ToString();
-    }
-
-    void ApplyStatEffects()
-    {
-        // Example: clamp values and trigger animations or feedback
-        // E.g. If Hunger > 80 trigger sadSound and sadAnimation
-
-        // pet.hunger = Mathf.Clamp(pet.hunger, 0f, 100f);
-        // pet.happiness = Mathf.Clamp(pet.happiness, 0f, 100f);
-
-        // TODO: Add visual/audio feedback based on thresholds
-    }
-
-    // Load previous pet data
-    void LoadPetState()
-    {
-        if (dataPersistenceManager == null)
+        if (pet == null)
         {
-            Debug.LogError("DataPersistenceManager is not assigned.");
-            return;
+            pet = GetComponent<Pet>();
+            if (pet == null)
+            {
+                Debug.LogError("Pet reference is missing.");
+                return;
+            }
         }
 
-        // TODO: Load from PlayerPrefs or JSON
-        GameData loadedData = dataPersistenceManager.LoadData();
+        string petID = pet.UniqueID;
 
-        if (loadedData == null)
+        // Load per-pet time
+        if (!data.allPetLastSavedTimes.TryGetValue(petID, out string savedTimeStr))
         {
-            Debug.LogError("Failed to load GameData.");
-            return;
+            Debug.Log($"No saved time found for pet '{petID}'. Using current time.");
+            savedTimeStr = DateTime.Now.ToString();
+            data.allPetLastSavedTimes[petID] = savedTimeStr;
         }
 
-        this.gameData = loadedData;
-        this.lastSavedTime = loadedData.lastSavedTime;
-
-        // Debug what's inside gameData after loading
-        /*
-        Debug.Log("=== GameData Debug ===");
-        Debug.Log($"lastSavedTime: {lastSavedTime}");
-        Debug.Log($"CurrentTime: {DateTime.Now}");
-        */
-
-        if (!DateTime.TryParse(lastSavedTime, out DateTime lastTime))
+        if (!DateTime.TryParse(savedTimeStr, out DateTime lastTime))
         {
             Debug.LogWarning("Invalid lastSavedTime. Using current time.");
             lastTime = DateTime.Now;
@@ -105,15 +77,34 @@ public class PetStat : MonoBehaviour, IDataPersistence
 
         TimeSpan elapsed = DateTime.Now - lastTime;
 
-        SimulateOfflineProgress(elapsed.TotalSeconds, gameData);
+        SimulateOfflineProgress(elapsed.TotalSeconds, data);
     }
 
-    // Save current pet data
-    void SavePetState()
+
+
+    public void SaveData(ref GameData data)
     {
-        // TODO: Save current stats
-        dataPersistenceManager.SaveGame();
+        if (pet == null)
+        {
+            Debug.LogError("Pet reference is missing. Cannot save lastSavedTime.");
+            return;
+        }
+
+        if (data == null)
+        {
+            Debug.LogError("GameData reference is null in PetStat.SaveData!");
+            return;
+        }
+
+        if (data.allPetLastSavedTimes == null)
+        {
+            Debug.LogWarning("allPetLastSavedTimes dictionary is null. Initializing...");
+            data.allPetLastSavedTimes = new Dictionary<string, string>();
+        }
+
+        data.allPetLastSavedTimes[pet.UniqueID] = DateTime.Now.ToString();
     }
+
 
     void SimulateOfflineProgress(double secondsPassed, GameData data)
     {
