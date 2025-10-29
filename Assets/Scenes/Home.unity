@@ -431,6 +431,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Emotions
       objectReference: {fileID: 0}
+    - target: {fileID: 1994122206534778584, guid: ec18cddb26034194ea9bcf56d19d6505, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 3286856190132553302, guid: ec18cddb26034194ea9bcf56d19d6505, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0.016053854
@@ -469,6 +473,22 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3286856190132553302, guid: ec18cddb26034194ea9bcf56d19d6505, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4514669555568231444, guid: ec18cddb26034194ea9bcf56d19d6505, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4546002460538175515, guid: ec18cddb26034194ea9bcf56d19d6505, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4900802369528834547, guid: ec18cddb26034194ea9bcf56d19d6505, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8367927741330460454, guid: ec18cddb26034194ea9bcf56d19d6505, type: 3}
+      propertyPath: m_Enabled
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
@@ -6151,7 +6171,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::PetMovement
   moveSpeed: 2
   rotationSpeed: 5
-  movementAreaSize: {x: 5.85, y: 7.84}
+  movementAreaSize: {x: 8.93, y: 7.84}
   movementAreaCenter: {x: 0.61, y: 0, z: 0.85}
   minIdleTime: 1
   maxIdleTime: 3
@@ -6197,6 +6217,8 @@ MonoBehaviour:
   dataPersistenceManager: {fileID: 0}
   uniqueID: 
   typeName: 
+  traitList: []
+  traitNames: []
   hungerMain: 50
   dirtinessMain: 50
   sadnessMain: 50
