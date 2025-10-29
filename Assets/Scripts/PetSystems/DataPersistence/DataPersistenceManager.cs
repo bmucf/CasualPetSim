@@ -50,12 +50,6 @@ public class DataPersistenceManager : MonoBehaviour
         data = LoadData() ?? new GameData();
     }
 
-
-    private void Start()
-    {
-
-        // LoadData();
-    }
     private void OnApplicationQuit()
     {
         this.dataPersistenceObjects = FindAllDataPersistenceObjects();
@@ -63,7 +57,7 @@ public class DataPersistenceManager : MonoBehaviour
         // Debug.Log($"Found {dataPersistenceObjects.Count} IDataPersistence objects on quit.");
         // Debug.Log($"Saving info to '{fileName}'.");
 
-        Debug.Log($"Saving game, GameData is null? {data == null}");
+        // Debug.Log($"Saving game, GameData is null? {data == null}");
 
         SaveGame();
     }

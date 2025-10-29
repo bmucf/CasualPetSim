@@ -8,7 +8,6 @@ using UnityEngine;
 public class PetStatsData
 {
 
-    // public string uniqueID;
     public string petName;
     public string typeName;
 
@@ -17,6 +16,6 @@ public class PetStatsData
     public float sadnessMain;
     public float sleepinessMain;
 
-    public List<string> traitNames = new();
+    public List<string> traitNames;
 
 }

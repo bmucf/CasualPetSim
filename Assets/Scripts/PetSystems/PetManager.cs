@@ -10,21 +10,21 @@ public class PetManager : MonoBehaviour, IDataPersistence
     [SerializeField] private TraitRegistrySO traitRegistry;
 
     private PetFactory petFactory;
-    private Pet pet;
+    // private Pet pet;
 
     public List<string> uniqueIDs = new List<string>();
 
 
     public void LoadData(GameData data)
     {
-        Debug.Log("PetManager LoadData Called");
+        // Debug.Log("PetManager LoadData Called");
 
         if (data.petIDList.Count != 0)
         {
             int i = 1;
             uniqueIDs = data.petIDList;
             
-            // Debug
+            /*// Debug
             ///
             Debug.Log("List of pet IDs:");
 
@@ -33,7 +33,7 @@ public class PetManager : MonoBehaviour, IDataPersistence
                 Debug.Log($"{i}: {id}\n");
                 i++;
             }
-            ///
+            ///*/
         }
         else
         {

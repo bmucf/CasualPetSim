@@ -32,6 +32,8 @@ public abstract class Pet : MonoBehaviour, IDataPersistence
             dirtinessMain = stats.dirtinessMain;
             sadnessMain = stats.sadnessMain;
             sleepinessMain = stats.sleepinessMain;
+
+            traitNames = stats.traitNames;
         }
         else
         {
@@ -62,14 +64,17 @@ public abstract class Pet : MonoBehaviour, IDataPersistence
         // Add unique ID to list
         data.AddPetID(uniqueID);
 
-        PetStatsData stats = new PetStatsData
+        PetStatsData stats = new()
         {
             petName = petName,
             typeName = typeName,
+
             hungerMain = hungerMain,
             dirtinessMain = dirtinessMain,
             sadnessMain = sadnessMain,
-            sleepinessMain = sleepinessMain
+            sleepinessMain = sleepinessMain,
+
+            traitNames = traitNames
         };
 
         data.allPetStats[uniqueID] = stats;
@@ -84,6 +89,10 @@ public abstract class Pet : MonoBehaviour, IDataPersistence
     public virtual string petName { get; set; }
 
     public string typeName;
+
+    public List<TraitDefinition> traitList;
+    [HideInInspector] 
+    public List<string> traitNames;
 
 
     // Main stats - Starting Values
@@ -121,13 +130,6 @@ public abstract class Pet : MonoBehaviour, IDataPersistence
     // Debug Variables
     private int rateOfChange = 100; // Use to speed up growth/decay rates
 
-    protected virtual void Awake()
-    {
-        /*
-        if (string.IsNullOrEmpty(uniqueID))
-            uniqueID = Guid.NewGuid().ToString();
-        */
-    }
 
     public void UpdateStats(float time)
     {
@@ -168,13 +170,6 @@ public abstract class Pet : MonoBehaviour, IDataPersistence
             uniqueID = Guid.NewGuid().ToString();
     }
 
-    public void ApplyDefaults(PetTypeDefinition def)
-    {
-        hungerMain = def.defaultHunger;
-        dirtinessMain = def.defaultDirtiness;
-        sadnessMain = def.defaultSadness;
-        sleepinessMain = def.defaultSleepiness;
-    }
     public void SetUniqueID(string ID)
     {
         if (!string.IsNullOrEmpty(ID))
