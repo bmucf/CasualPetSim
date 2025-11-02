@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using Unity.VisualScripting.Antlr3.Runtime.Misc;
 using UnityEngine;
 
@@ -22,9 +23,10 @@ public class PetFactory
     private readonly PetTypeRegistrySO registry;
     private readonly TraitRegistrySO traitRegistry;
 
-    private readonly Dictionary<string, GameObject> petPrefabs;
+    // private readonly Dictionary<string, GameObject> petPrefabs;
     
     readonly GameData data = DataPersistenceManager.instance.GetGameData();
+    private PetManager petManager;
 
     // ---------------- LOAD ----------------
     public Pet LoadPet(string ID)
@@ -40,6 +42,12 @@ public class PetFactory
         {
             GameObject go = GameObject.Instantiate(def.prefab);
             pet = go.GetComponent<Pet>();
+
+            // Add pet to dictionary
+            this.petManager.petInstances.Add(ID, go);
+            // Debug.Log($"Added {ID} to pet dictionary");
+            // Debug.Log($"{petManager.petInstances.Count}");
+
 
             if (pet == null)
             {
@@ -72,18 +80,22 @@ public class PetFactory
                 }
                 pet.traitList = new List<TraitDefinition>(traits);
                 pet.traitNames = traits.ConvertAll(t => t.traitName);
+
+
             }
             go.SetActive(false);
+
 
             // Debug.Log($"{ID}: {pet.petName}, {pet.typeName}, {pet.hungerMain}, {pet.dirtinessMain}, {pet.sadnessMain}, {pet.sleepinessMain}");
         }
         return pet;
     }
 
-    public PetFactory(PetTypeRegistrySO registry, TraitRegistrySO traitRegistry)
+    public PetFactory(PetTypeRegistrySO registry, TraitRegistrySO traitRegistry, PetManager petManager)
     {
         this.registry = registry;
         this.traitRegistry = traitRegistry;
+        this.petManager = petManager;
     }
 
     // Sets how common the number of traits a pet gets is
@@ -131,8 +143,17 @@ public class PetFactory
             return null;
         }
 
+        // Create unique ID
+        string ID = pet.CreateUniqueID();
+        Debug.Log($"New pet's ID: {ID}");
+
         // Initialize identity
         pet.Initialize(typeName, petName);
+
+        // Add pet to dictionary
+        this.petManager.petInstances.Add(ID, go);
+        // Debug.Log($"Added {ID} to pet dictionary");
+        // Debug.Log($"{petManager.petInstances.Count}");
 
         // Apply defaults from definition
         pet.hungerMain = def.defaultHunger;
@@ -143,10 +164,10 @@ public class PetFactory
         // ---  Assign traits ---
         int traitCount = GetTraitCountByRarity();
         List<TraitDefinition> traits = GetRandomTraits(traitCount);
-        Debug.Log($"Pet {petName} ({typeName}) got {traits.Count} traits:");
+        // Debug.Log($"Pet {petName} ({typeName}) got {traits.Count} traits:");
         foreach (var t in traits)
         {
-            Debug.Log($" - {t.traitName}: {t.description}");
+            // Debug.Log($" - {t.traitName}: {t.description}");
         }
 
         // Register in traits list

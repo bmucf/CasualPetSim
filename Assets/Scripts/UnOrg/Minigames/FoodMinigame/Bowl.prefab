@@ -11,7 +11,8 @@ GameObject:
   - component: {fileID: 3998602048989763762}
   - component: {fileID: 1522579420095551358}
   - component: {fileID: 4405398251947785152}
-  - component: {fileID: 1335349847978925780}
+  - component: {fileID: 886070403620057394}
+  - component: {fileID: 1397192844890561586}
   m_Layer: 0
   m_Name: Bowl
   m_TagString: Bowl
@@ -29,7 +30,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 8, y: 3.03, z: 0.43}
-  m_LocalScale: {x: 2.3639, y: 1.4389, z: 4.885804}
+  m_LocalScale: {x: 0.42626604, y: 0.29678375, z: 1.1820453}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
@@ -90,7 +91,22 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!65 &1335349847978925780
+--- !u!114 &886070403620057394
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1443732737827373104}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 640aec58d2fa65f46b6a3b6210240ba2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::BowlMovement
+  foodCamera: {fileID: 0}
+  minX: -4
+  maxX: 4
+--- !u!65 &1397192844890561586
 BoxCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -109,5 +125,5 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 1.1562935, y: 1.0896332, z: 1.125333}
-  m_Center: {x: 0.008860994, y: 0.044816777, z: -0.036726717}
+  m_Size: {x: 1, y: 1.3216403, z: 1.230766}
+  m_Center: {x: 0, y: 0, z: 0}

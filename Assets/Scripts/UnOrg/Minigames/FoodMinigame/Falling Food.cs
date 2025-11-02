@@ -1,38 +1,64 @@
+using System.Linq;
 using UnityEngine;
 
 public class FallingFood : MonoBehaviour
 {
-    public float fallSpeed = 5f;
+    private SpawningFood spawningFood;
+    private Rigidbody rb;
 
-    SpawningFood foodSpawner;
-    Rigidbody foodRb;
-    RoomUIManager uiManager;
+    [Header("Gravity Settings")]
+    public bool useGravity = true;   // toggle Unity's gravity
+    public Vector3 customGravity = new Vector3(0, -7.81f, 0); // per-object gravity
+    public float maxFallSpeed = -2f; // negative value for downward Y
 
-    void Start()
+
+    [Header("LifeSpan")]
+    public float lifeSpan = 10f;
+
+    void Awake()
     {
-        foodSpawner = GameObject.Find("Spawner").GetComponent<SpawningFood>();
-        foodRb = GetComponent<Rigidbody>();
-        uiManager = FindObjectOfType<RoomUIManager>();
+        rb = GetComponent<Rigidbody>();
     }
 
-    void Update()
+    private void Start()
     {
-        foodRb.AddForce(Vector3.down * fallSpeed, ForceMode.Acceleration);
+        Destroy(gameObject, lifeSpan);
+    }
 
-        if (uiManager == null || uiManager.minigameHasStarted == false)
+    void FixedUpdate()
+    {
+        // Toggle Unity's built-in gravity
+        rb.useGravity = useGravity;
+
+        // Apply custom gravity manually if Unity's gravity is off
+        if (!useGravity)
         {
+            rb.AddForce(customGravity, ForceMode.Acceleration);
+        }
+
+        Vector3 v = rb.linearVelocity;
+
+        // Clamp only the Y axis (falling down)
+        if (v.y < maxFallSpeed)
+        {
+            v.y = maxFallSpeed;
+            rb.linearVelocity = v;
+        }
+
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.CompareTag("Bowl"))
+        {
+            Debug.Log("A food hit has been collected");
+            spawningFood.UpdateScore();
             Destroy(gameObject);
         }
     }
-
-    void OnCollisionEnter(Collision collision)
+    public void Init(SpawningFood spawner)
     {
-        if (collision.gameObject.CompareTag("Bowl"))
-        {
-            if (foodSpawner != null)
-                foodSpawner.UpdateScore();
-
-            Destroy(gameObject);
-        }
+        spawningFood = spawner;
     }
+
 }

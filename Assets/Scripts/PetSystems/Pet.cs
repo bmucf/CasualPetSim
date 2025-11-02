@@ -176,11 +176,11 @@ public abstract class Pet : MonoBehaviour, IDataPersistence
         {
             uniqueID = ID;
         }
-        else
-        {
-            uniqueID = Guid.NewGuid().ToString();
-            Debug.Log("No ID found. Generating new ID.");
-        }
+    }
+    public string CreateUniqueID()
+    {
+        uniqueID = Guid.NewGuid().ToString();
+        return uniqueID;
     }
 
 }

@@ -13,6 +13,11 @@ public class PetManager : MonoBehaviour, IDataPersistence
     // private Pet pet;
 
     public List<string> uniqueIDs = new List<string>();
+    public string currentPetID;
+    private int currentIndex = 0;
+
+    public Dictionary<string, GameObject> petInstances = new Dictionary<string, GameObject>();
+
 
 
     public void LoadData(GameData data)
@@ -57,7 +62,7 @@ public class PetManager : MonoBehaviour, IDataPersistence
         {
             registry = Resources.Load<PetTypeRegistrySO>("SO/PetTypeRegistrySO");
             traitRegistry = Resources.Load<TraitRegistrySO>("SO/TraitRegistrySO");
-            petFactory = new PetFactory(registry, traitRegistry);
+            petFactory = new PetFactory(registry, traitRegistry, this);
         }
     }
 
@@ -72,6 +77,12 @@ public class PetManager : MonoBehaviour, IDataPersistence
             {
                 petFactory.LoadPet(id);
             }
+        }
+        if (uniqueIDs.Count > 0)
+        {
+            currentIndex = 0;
+            currentPetID = uniqueIDs[0];
+            petInstances[currentPetID].SetActive(true);
         }
         /*
         // Place it in the scene under the PetManager
@@ -90,12 +101,49 @@ public class PetManager : MonoBehaviour, IDataPersistence
     private void Update()
     {
         //
-         // Spawn another pet
+        // Spawn another pet
         if (Input.GetKeyDown(KeyCode.Space))
         {
             NewGame();
             Debug.Log("New Pet Added");
         }
+        // Switch Pet
+        if (Input.GetKeyDown(KeyCode.J))
+        {
+            Debug.Log("'J' key pressed");
+            SwitchPet();
+        }
+        if (Input.GetKeyDown(KeyCode.K))
+        {
+            Debug.Log("'K' key pressed");
+            int i= 0;
+            foreach (var pet in petInstances)
+            {
+                Debug.Log($"{i}: {pet}");
+                i++;
+            }
+
+        }
+
         //
+    }
+
+    private void SwitchPet()
+    {
+        if (uniqueIDs == null || uniqueIDs.Count == 0)
+            return;
+        // Turn off previous pet
+        petInstances[currentPetID].SetActive(false);
+
+        // advance index and wrap around
+        currentIndex = (currentIndex + 1) % uniqueIDs.Count;
+
+        // update currentPetID
+        currentPetID = uniqueIDs[currentIndex];
+
+        // Turn on current pet
+        petInstances[currentPetID].SetActive(true);
+
+        // Debug.Log($"Switched to pet {currentPetID}");
     }
 }
