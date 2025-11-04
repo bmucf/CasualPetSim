@@ -20,8 +20,6 @@ public class RoomUIManager : MonoBehaviour
     {
         // default state
         if (mainHUD != null) mainHUD.SetActive(true);
-        if (feedingMinigameRoot != null) feedingMinigameRoot.SetActive(false);
-        if (feedingHUDCanvas != null) feedingHUDCanvas.SetActive(false);
 
         if (shopPopup != null) shopPopup.SetActive(false);
         if (settingsPopup != null) settingsPopup.SetActive(false);
@@ -90,17 +88,15 @@ public class RoomUIManager : MonoBehaviour
 
     // ---------- MINIGAME CONTROL ----------
 
-    public void GoToFoodMiniGame()
+    public void GoToFoodMiniGame(string sceneName)
     {
+        Time.timeScale = 1;
+
         // hide UI popups
         CloseAllPopups();
-        
+        if (mainHUD != null) mainHUD.SetActive(false);
 
-
-        // enable minigame world + HUD
-        if (feedingMinigameRoot != null) feedingMinigameRoot.SetActive(true);
-        if (feedingHUDCanvas != null) feedingHUDCanvas.SetActive(true);
-
+        SceneManager.LoadScene(sceneName);
     }
    
     public void GoToBathScene(string sceneName)

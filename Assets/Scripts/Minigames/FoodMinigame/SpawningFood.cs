@@ -1,9 +1,12 @@
-using UnityEngine;
-using TMPro;
 using System.Collections;
+using TMPro;
+using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class SpawningFood : MonoBehaviour
 {
+    [SerializeField] private string currentPetID;
+
     [Header("Food prefab & parent")]
     public GameObject food;
 
@@ -53,8 +56,20 @@ public class SpawningFood : MonoBehaviour
 
     private void Start()
     {
-        //Instantiate(food);
+        
+        // Instantiate(food);
+        
+        if (SessionContent.CurrentPetID != null)
+            currentPetID = SessionContent.CurrentPetID;
+
+        if (currentPetID != null) 
+        { 
         BeginMinigameRound();
+        }
+        else
+        {
+            Debug.LogError("No pet to save data to.");
+        }
     }
 
     private void Update()
@@ -66,8 +81,8 @@ public class SpawningFood : MonoBehaviour
         if (foodTimer != null)
             foodTimer.text = $"Time: {Mathf.CeilToInt(mgTimer)}";
 
-        //if (mgTimer <= 0f || foodCount >= targetFood)
-        //    EndMinigame();
+        if (mgTimer <= 0f || foodCount >= targetFood)
+            EndMinigame();
     }
 
     public void BeginMinigameRound()
@@ -132,17 +147,16 @@ public class SpawningFood : MonoBehaviour
         }
 
         // If you want to apply rewards, call it here
-        // ApplyFeedingRewardToPet();
+        ApplyFeedingRewardToPet(currentPetID);
+        SceneManager.LoadScene("Home");
     }
 
-    // Optional reward hook — avoid FindObjectOfType in production; inject reference instead
-    private void ApplyFeedingRewardToPet()
-    {
-        Pet pet = FindObjectOfType<Pet>();
-        if (pet == null) return;
-
+    private void ApplyFeedingRewardToPet(string petID)
+    {        
         float hungerReducePerFood = 5f;
         float totalReduce = foodCount * hungerReducePerFood;
-        pet.hungerMain = Mathf.Max(0f, pet.hungerMain - totalReduce);
+
+        // ------------------- Current goes over clamp values. Need to fix ------------------- 
+        DataPersistenceManager.instance.UpdatePetStat(petID, s => s.hungerMain += totalReduce);
     }
 }

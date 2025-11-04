@@ -13,6 +13,8 @@ This script goes on an empty game object within the scene
 the category 'File Name' should be named: '{Name}.json'
 */
 
+// Note: When pet stats are individually updated they are not updated till next load currently
+
 
 public class DataPersistenceManager : MonoBehaviour
 {
@@ -48,6 +50,7 @@ public class DataPersistenceManager : MonoBehaviour
 
         this.dataHandler = new FileDataHandler(Application.persistentDataPath, fileName);
         data = LoadData() ?? new GameData();
+        DontDestroyOnLoad(gameObject);
     }
 
     private void OnApplicationQuit()
@@ -141,4 +144,16 @@ public class DataPersistenceManager : MonoBehaviour
         return this.data;
     }
 
+    public void UpdatePetStat(string petID, Action<PetStatsData> updateAction)
+    {
+        if (data.allPetStats.TryGetValue(petID, out var stats))
+        {
+            updateAction(stats);
+            dataHandler.Save(data); // immediately persist
+        }
+        else
+        {
+            Debug.LogWarning($"No stats found for pet {petID}");
+        }
+    }
 }

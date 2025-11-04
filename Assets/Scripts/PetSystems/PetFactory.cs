@@ -28,9 +28,23 @@ public class PetFactory
     readonly GameData data = DataPersistenceManager.instance.GetGameData();
     private PetManager petManager;
 
-    // ---------------- LOAD ----------------
-    public Pet LoadPet(string ID)
+    // If no spawnPoint then spawn 
+    private Vector3 spawnPos;
+    private Quaternion spawnRot;
+
+    private void Init()
     {
+        // Fallback: pick a default position/rotation
+        spawnPos = new Vector3(0f, 0f, 0f); // origin, or wherever you want
+        spawnRot = Quaternion.identity;     // no rotation
+
+    }
+
+    // ---------------- LOAD ----------------
+    public Pet LoadPet(string ID, Transform spawnPoint)
+    {
+        Init();
+
         Pet pet = null;
         PetStatsData stats = data.allPetStats[ID];
 
@@ -40,8 +54,19 @@ public class PetFactory
         }
         else
         {
-            GameObject go = GameObject.Instantiate(def.prefab);
-            pet = go.GetComponent<Pet>();
+            GameObject go;
+            if (spawnPoint != null)
+            {
+                go = GameObject.Instantiate(def.prefab, spawnPoint.position, spawnPoint.rotation);
+                pet = go.GetComponent<Pet>();
+            }
+            else
+            {
+                go = GameObject.Instantiate(def.prefab, spawnPos, spawnRot);
+                pet = go.GetComponent<Pet>();
+            }
+
+
 
             // Add pet to dictionary
             this.petManager.petInstances.Add(ID, go);
@@ -126,16 +151,28 @@ public class PetFactory
     }
 
     /// Create a new pet instance by name and pet type.
-    public Pet CreatePet(string petName, string typeName)
+    public Pet CreatePet(string petName, string typeName, Transform spawnPoint)
     {
+        Init();
         if (!registry.TryGet(typeName, out PetTypeDefinition def))
         {
             Debug.LogError($"No PetTypeDefinition found for {typeName}");
             return null;
         }
 
-        GameObject go = GameObject.Instantiate(def.prefab);
-        Pet pet = go.GetComponent<Pet>();
+        GameObject go;
+        Pet pet;
+
+        if (spawnPoint != null)
+        {
+            go = GameObject.Instantiate(def.prefab, spawnPoint.position, spawnPoint.rotation);
+            pet = go.GetComponent<Pet>();
+        }
+        else
+        {
+            go = GameObject.Instantiate(def.prefab, spawnPos, spawnRot);
+            pet = go.GetComponent<Pet>();
+        }
 
         if (pet == null)
         {

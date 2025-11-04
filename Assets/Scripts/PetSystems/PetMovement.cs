@@ -7,8 +7,8 @@ public class PetMovement : MonoBehaviour
     [Header("Movement Settings")]
     [SerializeField] private float moveSpeed = 1.5f;
     [SerializeField] private float rotationSpeed = 10f;
-    [SerializeField] private Vector2 movementAreaSize = new Vector2(5f, 5f); // Width x Depth
-    [SerializeField] private Vector3 movementAreaCenter = Vector3.zero;
+    //[SerializeField] private Vector2 movementAreaSize = new Vector2(5f, 5f); // Width x Depth
+    //[SerializeField] private Vector3 movementAreaCenter = Vector3.zero;
 
     [Header("Behavior Settings")]
     [SerializeField] private float minIdleTime = 5f;
@@ -39,6 +39,15 @@ public class PetMovement : MonoBehaviour
 
         // If you want to handle rotation manually, uncomment:
         // agent.updateRotation = false;
+
+        NavMeshHit hit;
+        if (!NavMesh.SamplePosition(transform.position, out hit, 1f, NavMesh.AllAreas))
+        {
+            Debug.LogWarning("PetMovement: Agent is not on a valid NavMesh surface. Disabling script.");
+            this.enabled = false;
+            return;
+        }
+
     }
 
     private void OnEnable()
@@ -74,7 +83,7 @@ public class PetMovement : MonoBehaviour
         isMoving = true;
         SetAnimation(false, true);
 
-        currentTarget = GetRandomPointInArea();
+        currentTarget = GetRandomPointOnNavMesh();
         agent.SetDestination(currentTarget);
 
         float walkDuration = Random.Range(minWalkTime, maxWalkTime);
@@ -84,29 +93,13 @@ public class PetMovement : MonoBehaviour
         {
             if (!agent.pathPending && agent.remainingDistance <= agent.stoppingDistance)
             {
-                currentTarget = GetRandomPointInArea();
+                currentTarget = GetRandomPointOnNavMesh();
                 agent.SetDestination(currentTarget);
             }
 
             elapsedTime += Time.deltaTime;
             yield return null;
         }
-    }
-
-    private Vector3 GetRandomPointInArea()
-    {
-        Vector3 randomPoint = movementAreaCenter +
-            new Vector3(Random.Range(-movementAreaSize.x / 2f, movementAreaSize.x / 2f),
-                        0f,
-                        Random.Range(-movementAreaSize.y / 2f, movementAreaSize.y / 2f));
-
-        NavMeshHit hit;
-        if (NavMesh.SamplePosition(randomPoint, out hit, 1.0f, NavMesh.AllAreas))
-        {
-            return hit.position;
-        }
-
-        return transform.position; // fallback
     }
 
     private void Update()
@@ -139,9 +132,23 @@ public class PetMovement : MonoBehaviour
         }
     }
 
-    private void OnDrawGizmosSelected()
+    private Vector3 GetRandomPointOnNavMesh(float radius = 50f, int maxAttempts = 30)
     {
-        Gizmos.color = Color.green;
-        Gizmos.DrawWireCube(movementAreaCenter, new Vector3(movementAreaSize.x, 0.1f, movementAreaSize.y));
+        for (int i = 0; i < maxAttempts; i++)
+        {
+            // Pick a random point in a sphere around the agent
+            Vector3 randomDirection = Random.insideUnitSphere * radius;
+            randomDirection += transform.position;
+
+            NavMeshHit hit;
+            if (NavMesh.SamplePosition(randomDirection, out hit, 2f, NavMesh.AllAreas))
+            {
+                return hit.position;
+            }
+        }
+
+        // If no point was found after all attempts, throw an error
+        // Debug.LogError("PetMovement: Could not find a valid point on the NavMesh!");
+        return transform.position; // fallback to current position
     }
 }

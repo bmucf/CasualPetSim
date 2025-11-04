@@ -18,6 +18,8 @@ public class PetManager : MonoBehaviour, IDataPersistence
 
     public Dictionary<string, GameObject> petInstances = new Dictionary<string, GameObject>();
 
+    [SerializeField] private Transform spawnPoint;
+
 
 
     public void LoadData(GameData data)
@@ -75,13 +77,18 @@ public class PetManager : MonoBehaviour, IDataPersistence
         {
             foreach (var id in uniqueIDs)
             {
-                petFactory.LoadPet(id);
+                petFactory.LoadPet(id, spawnPoint);
             }
         }
-        if (uniqueIDs.Count > 0)
+        if (uniqueIDs.Count > 0 && SessionContent.CurrentPetID == null)
         {
             currentIndex = 0;
             currentPetID = uniqueIDs[0];
+            petInstances[currentPetID].SetActive(true);
+        }
+        else
+        {
+            currentPetID = SessionContent.CurrentPetID;
             petInstances[currentPetID].SetActive(true);
         }
         /*
@@ -94,7 +101,7 @@ public class PetManager : MonoBehaviour, IDataPersistence
 
     public void NewGame()
     {
-        petFactory.CreatePet("Rocko", "PetRocko");
+        petFactory.CreatePet("Rocko", "PetRocko", spawnPoint);
     }
 
     // TESTING
@@ -145,5 +152,10 @@ public class PetManager : MonoBehaviour, IDataPersistence
         petInstances[currentPetID].SetActive(true);
 
         // Debug.Log($"Switched to pet {currentPetID}");
+    }
+
+    private void OnDestroy()
+    {
+        SessionContent.CurrentPetID = currentPetID;
     }
 }

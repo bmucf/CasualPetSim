@@ -520,55 +520,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &146847299
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 146847301}
-  - component: {fileID: 146847300}
-  m_Layer: 0
-  m_Name: PetManager
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &146847300
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 146847299}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f8156644169f6774db1f581ef258895f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::PetManager
-  registry: {fileID: 0}
-  traitRegistry: {fileID: 0}
-  uniqueIDs: []
-  currentPetID: 
-  spawnPoint: {fileID: 1163736354}
---- !u!4 &146847301
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 146847299}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 3.29413, y: 0.4021, z: -3.80647}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &164868414
 GameObject:
   m_ObjectHideFlags: 0
@@ -1630,7 +1581,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 182375499886980267, guid: 1f311e26069cddf4d83ebae0369363a7, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6974350153831110699, guid: 1f311e26069cddf4d83ebae0369363a7, type: 3}
       propertyPath: m_LocalScale.x
@@ -3460,37 +3411,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1148133331}
   m_CullTransparentMesh: 1
---- !u!1 &1163736353
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1163736354}
-  m_Layer: 0
-  m_Name: SpawnLocation
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &1163736354
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1163736353}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.207, y: 0, z: -3.26}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1219726947
 GameObject:
   m_ObjectHideFlags: 0
@@ -3836,6 +3756,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::PetMovement
   moveSpeed: 2
   rotationSpeed: 5
+  movementAreaSize: {x: 8.93, y: 7.84}
+  movementAreaCenter: {x: 0.61, y: 0, z: 0.85}
   minIdleTime: 1
   maxIdleTime: 3
   minWalkTime: 2
@@ -3971,7 +3893,6 @@ GameObject:
   - component: {fileID: 1423599382}
   - component: {fileID: 1423599381}
   - component: {fileID: 1423599380}
-  - component: {fileID: 1423599383}
   m_Layer: 0
   m_Name: CinemachineCamera
   m_TagString: Untagged
@@ -4050,21 +3971,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1423599383
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1423599379}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f4ec892eced7a5e48b237e378704e88c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::CinemachineDynamicTargetSwitcher
-  cinemachineCam: {fileID: 0}
-  targetName: EyeContactPoint
-  requireActive: 1
 --- !u!1 &1454749144
 GameObject:
   m_ObjectHideFlags: 0
@@ -5586,6 +5492,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::PetMovement
   moveSpeed: 2
   rotationSpeed: 5
+  movementAreaSize: {x: 8.93, y: 7.84}
+  movementAreaCenter: {x: 0.61, y: 0, z: 0.85}
   minIdleTime: 1
   maxIdleTime: 3
   minWalkTime: 2
@@ -6661,14 +6569,12 @@ SceneRoots:
   m_Roots:
   - {fileID: 1875050886}
   - {fileID: 1948812433}
-  - {fileID: 1423599382}
   - {fileID: 441581742}
   - {fileID: 1235525156}
   - {fileID: 599701537}
   - {fileID: 499503724}
   - {fileID: 5539740417003669346}
+  - {fileID: 1423599382}
   - {fileID: 1615896462}
-  - {fileID: 146847301}
   - {fileID: 91416716}
   - {fileID: 4712883149670214284}
-  - {fileID: 1163736354}
