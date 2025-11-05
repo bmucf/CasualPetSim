@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Xml;
 using UnityEngine;
+using static Pet;
 
 // ~ Istvan W
 
@@ -38,9 +39,17 @@ public class PetStat : MonoBehaviour, IDataPersistence
     {
         if (pet.hungerMain < 100 || pet.dirtinessMain < 100 || pet.sleepinessMain < 100 || pet.sadnessMain < 100)
         {
-            pet.UpdateStats(Time.deltaTime);
+            // pet.UpdateStats(Time.deltaTime);
             // Debug.Log("Stat update called.");
         }
+        if (pet.hungerMain > 100)
+            pet.ClampStat(StatType.Hunger);
+        if (pet.dirtinessMain > 100)
+            pet.ClampStat(StatType.Dirtiness);
+        if (pet.sleepinessMain > 100)
+            pet.ClampStat(StatType.Sleepiness);
+        if (pet.sadnessMain > 100)
+            pet.ClampStat(StatType.Sadness);
 
         // ApplyStatEffects();
     }

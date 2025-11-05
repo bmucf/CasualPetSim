@@ -3,6 +3,8 @@ using UnityEngine.SceneManagement;
 
 public class RoomUIManager : MonoBehaviour
 {
+    private SessionContent sessionContent;
+
     [Header("Main UI Groups")]
     public GameObject mainHUD;              // normal HUD
     public GameObject feedingMinigameRoot;  // minigame world objs
@@ -13,28 +15,16 @@ public class RoomUIManager : MonoBehaviour
     public GameObject settingsPopup;
     public GameObject inventoryPopup;       // NEW: inventory panel (Popup_Inventory)
 
-    [Header("Minigame Components")]
-    public GameObject bowlObject;
-    public GameObject mainCamera;
-    public GameObject feedingCamera;
-    public SpawningFood feedingSpawner;
-
-    [HideInInspector] public bool minigameHasStarted = false;
 
     void Start()
     {
         // default state
         if (mainHUD != null) mainHUD.SetActive(true);
-        if (feedingMinigameRoot != null) feedingMinigameRoot.SetActive(false);
-        if (feedingHUDCanvas != null) feedingHUDCanvas.SetActive(false);
 
         if (shopPopup != null) shopPopup.SetActive(false);
         if (settingsPopup != null) settingsPopup.SetActive(false);
         if (inventoryPopup != null) inventoryPopup.SetActive(false);
 
-        if (mainCamera != null) mainCamera.SetActive(true);
-        if (feedingCamera != null) feedingCamera.SetActive(false);
-        if (bowlObject != null) bowlObject.SetActive(false);
     }
 
     // ---------- OPEN / CLOSE POPUPS ----------
@@ -49,7 +39,6 @@ public class RoomUIManager : MonoBehaviour
     public void CloseShop()
     {
         if (shopPopup != null) shopPopup.SetActive(false);
-        if (!minigameHasStarted && mainHUD != null) mainHUD.SetActive(true);
     }
 
     public void OpenSettings()
@@ -62,7 +51,6 @@ public class RoomUIManager : MonoBehaviour
     public void CloseSettings()
     {
         if (settingsPopup != null) settingsPopup.SetActive(false);
-        if (!minigameHasStarted && mainHUD != null) mainHUD.SetActive(true);
     }
 
     // NEW: Inventory popup
@@ -88,7 +76,6 @@ public class RoomUIManager : MonoBehaviour
     public void CloseInventory()
     {
         if (inventoryPopup != null) inventoryPopup.SetActive(false);
-        if (!minigameHasStarted && mainHUD != null) mainHUD.SetActive(true);
     }
 
     // close everything popup-like
@@ -101,51 +88,16 @@ public class RoomUIManager : MonoBehaviour
 
     // ---------- MINIGAME CONTROL ----------
 
-    public void StartFeedingMinigame()
+    public void GoToFoodMiniGame(string sceneName)
     {
-        minigameHasStarted = true;
+        Time.timeScale = 1;
 
         // hide UI popups
         CloseAllPopups();
-
-        // hide normal HUD
         if (mainHUD != null) mainHUD.SetActive(false);
 
-        // enable minigame world + HUD
-        if (feedingMinigameRoot != null) feedingMinigameRoot.SetActive(true);
-        if (feedingHUDCanvas != null) feedingHUDCanvas.SetActive(true);
-
-        // camera swap
-        if (mainCamera != null) mainCamera.SetActive(false);
-        if (feedingCamera != null) feedingCamera.SetActive(true);
-
-        // bowl + spawner ON
-        if (bowlObject != null) bowlObject.SetActive(true);
-        // feedingSpawner should already be in scene and start doing its job
+        SceneManager.LoadScene(sceneName);
     }
-
-    public void ExitFeedingMinigame()
-    {
-        minigameHasStarted = false;
-
-        // turn off minigame world + HUD
-        if (feedingMinigameRoot != null) feedingMinigameRoot.SetActive(false);
-        if (feedingHUDCanvas != null) feedingHUDCanvas.SetActive(false);
-
-        // cameras back
-        if (mainCamera != null) mainCamera.SetActive(true);
-        if (feedingCamera != null) feedingCamera.SetActive(false);
-
-        // bowl OFF
-        if (bowlObject != null) bowlObject.SetActive(false);
-
-        // popups stay closed
-        CloseAllPopups();
-
-        // normal HUD back
-        if (mainHUD != null) mainHUD.SetActive(true);
-    }
-
    
     public void GoToBathScene(string sceneName)
     {

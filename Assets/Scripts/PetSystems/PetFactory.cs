@@ -1,5 +1,7 @@
 using System;
 using System.Collections.Generic;
+using System.Xml;
+using Unity.VisualScripting;
 using Unity.VisualScripting.Antlr3.Runtime.Misc;
 using UnityEngine;
 
@@ -22,13 +24,28 @@ public class PetFactory
     private readonly PetTypeRegistrySO registry;
     private readonly TraitRegistrySO traitRegistry;
 
-    private readonly Dictionary<string, GameObject> petPrefabs;
+    // private readonly Dictionary<string, GameObject> petPrefabs;
     
     readonly GameData data = DataPersistenceManager.instance.GetGameData();
+    private PetManager petManager;
+
+    // If no spawnPoint then spawn 
+    private Vector3 spawnPos;
+    private Quaternion spawnRot;
+
+    private void Init()
+    {
+        // Fallback: pick a default position/rotation
+        spawnPos = new Vector3(0f, 0f, 0f); // origin, or wherever you want
+        spawnRot = Quaternion.identity;     // no rotation
+
+    }
 
     // ---------------- LOAD ----------------
-    public Pet LoadPet(string ID)
+    public Pet LoadPet(string ID, Transform spawnPoint)
     {
+        Init();
+
         Pet pet = null;
         PetStatsData stats = data.allPetStats[ID];
 
@@ -38,8 +55,26 @@ public class PetFactory
         }
         else
         {
-            GameObject go = GameObject.Instantiate(def.prefab);
-            pet = go.GetComponent<Pet>();
+            GameObject go;
+            if (spawnPoint != null)
+            {
+                go = GameObject.Instantiate(def.prefab, spawnPoint.position, spawnPoint.rotation);
+                pet = go.GetComponent<Pet>();
+            }
+            else
+            {
+                go = GameObject.Instantiate(def.prefab, spawnPos, spawnRot);
+                pet = go.GetComponent<Pet>();
+            }
+
+
+
+            // Add pet to dictionary
+            this.petManager.petInstances.Add(ID, go);
+            this.petManager.petObjectReference.Add(ID, pet);
+            // Debug.Log($"Added {ID} to pet dictionary");
+            // Debug.Log($"{petManager.petInstances.Count}");
+
 
             if (pet == null)
             {
@@ -72,18 +107,22 @@ public class PetFactory
                 }
                 pet.traitList = new List<TraitDefinition>(traits);
                 pet.traitNames = traits.ConvertAll(t => t.traitName);
+
+
             }
             go.SetActive(false);
+
 
             // Debug.Log($"{ID}: {pet.petName}, {pet.typeName}, {pet.hungerMain}, {pet.dirtinessMain}, {pet.sadnessMain}, {pet.sleepinessMain}");
         }
         return pet;
     }
 
-    public PetFactory(PetTypeRegistrySO registry, TraitRegistrySO traitRegistry)
+    public PetFactory(PetTypeRegistrySO registry, TraitRegistrySO traitRegistry, PetManager petManager)
     {
         this.registry = registry;
         this.traitRegistry = traitRegistry;
+        this.petManager = petManager;
     }
 
     // Sets how common the number of traits a pet gets is
@@ -114,16 +153,28 @@ public class PetFactory
     }
 
     /// Create a new pet instance by name and pet type.
-    public Pet CreatePet(string petName, string typeName)
+    public Pet CreatePet(string petName, string typeName, Transform spawnPoint)
     {
+        Init();
         if (!registry.TryGet(typeName, out PetTypeDefinition def))
         {
             Debug.LogError($"No PetTypeDefinition found for {typeName}");
             return null;
         }
 
-        GameObject go = GameObject.Instantiate(def.prefab);
-        Pet pet = go.GetComponent<Pet>();
+        GameObject go;
+        Pet pet;
+
+        if (spawnPoint != null)
+        {
+            go = GameObject.Instantiate(def.prefab, spawnPoint.position, spawnPoint.rotation);
+            pet = go.GetComponent<Pet>();
+        }
+        else
+        {
+            go = GameObject.Instantiate(def.prefab, spawnPos, spawnRot);
+            pet = go.GetComponent<Pet>();
+        }
 
         if (pet == null)
         {
@@ -131,8 +182,19 @@ public class PetFactory
             return null;
         }
 
+        // Create unique ID
+        string ID = pet.CreateUniqueID();
+        // Debug.Log($"New pet's ID: {ID}");
+
         // Initialize identity
         pet.Initialize(typeName, petName);
+
+        // Add pet to dictionary
+        this.petManager.uniqueIDs.Add(ID);
+        this.petManager.petInstances.Add(ID, go);
+        this.petManager.petObjectReference.Add(ID, pet);
+        // Debug.Log($"Added {ID} to pet dictionary");
+        // Debug.Log($"{petManager.petInstances.Count}");
 
         // Apply defaults from definition
         pet.hungerMain = def.defaultHunger;
@@ -143,16 +205,17 @@ public class PetFactory
         // ---  Assign traits ---
         int traitCount = GetTraitCountByRarity();
         List<TraitDefinition> traits = GetRandomTraits(traitCount);
-        Debug.Log($"Pet {petName} ({typeName}) got {traits.Count} traits:");
+        // Debug.Log($"Pet {petName} ({typeName}) got {traits.Count} traits:");
         foreach (var t in traits)
         {
-            Debug.Log($" - {t.traitName}: {t.description}");
+            // Debug.Log($" - {t.traitName}: {t.description}");
         }
 
         // Register in traits list
         pet.traitList = new List<TraitDefinition>(traits);
         pet.traitNames = traits.ConvertAll(t => t.traitName);
 
+        go.SetActive(false);
 
         return pet;
     }
