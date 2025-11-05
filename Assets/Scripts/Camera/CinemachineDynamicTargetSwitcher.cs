@@ -41,7 +41,7 @@ public class CinemachineDynamicTargetSwitcher : MonoBehaviour
             currentTarget = null;
             cinemachineCam.Follow = null;
             cinemachineCam.LookAt = null;
-            Debug.Log($"Target '{targetName}' became inactive — cleared camera target.");
+            // Debug.Log($"Target '{targetName}' became inactive — cleared camera target.");
         }
     }
 }

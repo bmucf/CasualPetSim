@@ -51,7 +51,7 @@ public class FallingFood : MonoBehaviour
     {
         if (other.CompareTag("Bowl"))
         {
-            Debug.Log("A food hit has been collected");
+            // Debug.Log("A food hit has been collected");
             spawningFood.UpdateScore();
             Destroy(gameObject);
         }

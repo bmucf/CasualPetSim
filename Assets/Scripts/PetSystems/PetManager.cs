@@ -10,16 +10,22 @@ public class PetManager : MonoBehaviour, IDataPersistence
     [SerializeField] private TraitRegistrySO traitRegistry;
 
     private PetFactory petFactory;
-    // private Pet pet;
+    
+    public static PetManager Instance { get; private set; }
+    public Pet CurrentPet { get; private set; }
+
 
     public List<string> uniqueIDs = new List<string>();
     public string currentPetID;
     private int currentIndex = 0;
+    public bool newGame = false;
 
     public Dictionary<string, GameObject> petInstances = new Dictionary<string, GameObject>();
+    public Dictionary<string, Pet> petObjectReference = new Dictionary<string, Pet>();
 
     [SerializeField] private Transform spawnPoint;
 
+    public event System.Action<Pet> OnPetChanged;
 
 
     public void LoadData(GameData data)
@@ -45,8 +51,10 @@ public class PetManager : MonoBehaviour, IDataPersistence
         else
         {
             Debug.Log("No data was found, creating default pet");
+            newGame = true;
             InitializeFactory();
             NewGame();
+            currentPetID = uniqueIDs[0];
         }
     }
     public void SaveData(ref GameData data)
@@ -66,15 +74,20 @@ public class PetManager : MonoBehaviour, IDataPersistence
             traitRegistry = Resources.Load<TraitRegistrySO>("SO/TraitRegistrySO");
             petFactory = new PetFactory(registry, traitRegistry, this);
         }
+        if (Instance != null && Instance != this)
+        {
+            Destroy(gameObject);
+            return;
+        }
+        Instance = this;
     }
 
     void Start()
     {
-        // GameData data = DataPersistenceManager.instance.GetGameData();
 
-        // Load the pet(s)
-        if (uniqueIDs != null)
+        if (!newGame)
         {
+            // Load the pet(s)
             foreach (var id in uniqueIDs)
             {
                 petFactory.LoadPet(id, spawnPoint);
@@ -84,13 +97,14 @@ public class PetManager : MonoBehaviour, IDataPersistence
         {
             currentIndex = 0;
             currentPetID = uniqueIDs[0];
-            petInstances[currentPetID].SetActive(true);
+            SetActivePet(); 
         }
         else
         {
             currentPetID = SessionContent.CurrentPetID;
-            petInstances[currentPetID].SetActive(true);
+            SetActivePet();
         }
+
         /*
         // Place it in the scene under the PetManager
         var go = pet.gameObject;
@@ -112,6 +126,8 @@ public class PetManager : MonoBehaviour, IDataPersistence
         if (Input.GetKeyDown(KeyCode.Space))
         {
             NewGame();
+            SwitchPet();
+            SetActivePet();
             Debug.Log("New Pet Added");
         }
         // Switch Pet
@@ -139,6 +155,9 @@ public class PetManager : MonoBehaviour, IDataPersistence
     {
         if (uniqueIDs == null || uniqueIDs.Count == 0)
             return;
+        // Save before switch
+        DataPersistenceManager.instance.SaveGame();
+
         // Turn off previous pet
         petInstances[currentPetID].SetActive(false);
 
@@ -148,14 +167,26 @@ public class PetManager : MonoBehaviour, IDataPersistence
         // update currentPetID
         currentPetID = uniqueIDs[currentIndex];
 
-        // Turn on current pet
-        petInstances[currentPetID].SetActive(true);
-
-        // Debug.Log($"Switched to pet {currentPetID}");
+        SetActivePet();
     }
 
     private void OnDestroy()
     {
         SessionContent.CurrentPetID = currentPetID;
+    }
+    public void SetActivePet()
+    {
+        if (!petInstances.ContainsKey(currentPetID) || !petObjectReference.ContainsKey(currentPetID))
+        {
+            Debug.LogWarning($"PetManager: Tried to set active pet with ID {currentPetID}, but it wasn't found.");
+            return;
+        }
+
+        petInstances[currentPetID].SetActive(true);
+        CurrentPet = petObjectReference[currentPetID];
+        SessionContent.CurrentPetID = currentPetID;
+
+        // Notify subscribers of pet change
+        OnPetChanged?.Invoke(CurrentPet);
     }
 }

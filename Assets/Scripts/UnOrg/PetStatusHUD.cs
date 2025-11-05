@@ -72,7 +72,7 @@ public class PetStatusHUD : MonoBehaviour
         UpdateBar(cleanlinessFill, cleanRatio, cleanlinessText);
         UpdateBar(restFill, restedRatio, restText);
         UpdateBar(moodFill, happyRatio, moodText);
-        Debug.Log($"HUD DEBUG hunger={pet.hungerMain} fedRatio={fedRatio}");
+        // Debug.Log($"HUD DEBUG hunger={pet.hungerMain} fedRatio={fedRatio}");
 
     }
 

@@ -34,18 +34,18 @@ public class DataPersistenceManager : MonoBehaviour
         {
             Debug.LogError("Found more than one Data Persistence Manager in scene");
             Destroy(gameObject);
-            return;
+            // return;
         }
         instance = this;
 
         if (string.IsNullOrEmpty(fileName))
         {
-            Debug.LogWarning("File name is empty!");
+            // Debug.LogWarning("File name is empty!");
             fileName = "Test.json";
         }
         else
         {
-            Debug.Log($"The file name is '{fileName}'");
+            // Debug.Log($"The file name is '{fileName}'");
         }
 
         this.dataHandler = new FileDataHandler(Application.persistentDataPath, fileName);
@@ -55,13 +55,6 @@ public class DataPersistenceManager : MonoBehaviour
 
     private void OnApplicationQuit()
     {
-        this.dataPersistenceObjects = FindAllDataPersistenceObjects();
-
-        // Debug.Log($"Found {dataPersistenceObjects.Count} IDataPersistence objects on quit.");
-        // Debug.Log($"Saving info to '{fileName}'.");
-
-        // Debug.Log($"Saving game, GameData is null? {data == null}");
-
         SaveGame();
     }
 
@@ -73,6 +66,12 @@ public class DataPersistenceManager : MonoBehaviour
 
     public void SaveGame()
     {
+        this.dataPersistenceObjects = FindAllDataPersistenceObjects();
+        // Debug.Log($"Found {dataPersistenceObjects.Count} IDataPersistence objects on quit.");
+        // Debug.Log($"Saving info to '{fileName}'.");
+
+        // Debug.Log($"Saving game, GameData is null? {data == null}");
+
         foreach (IDataPersistence dataPersistenceObj in dataPersistenceObjects)
         {
             dataPersistenceObj.SaveData(ref data);
@@ -97,7 +96,7 @@ public class DataPersistenceManager : MonoBehaviour
 
         if (this.data == null)
         {
-            Debug.LogWarning("No data was found. Initialing data to defaults.");
+            // Debug.LogWarning("No data was found. Initialing data to defaults.");
             NewGame();
         }
 
@@ -117,7 +116,7 @@ public class DataPersistenceManager : MonoBehaviour
                 try
                 {
                     dataPersistenceObj.LoadData(data);
-                    Debug.Log($"Loaded IDataPersistence: {dataPersistenceObj.GetType().Name}");
+                    // Debug.Log($"Loaded IDataPersistence: {dataPersistenceObj.GetType().Name}");
                 }
                 catch (Exception ex)
                 {
@@ -125,7 +124,7 @@ public class DataPersistenceManager : MonoBehaviour
                 }
             }
         }
-        Debug.Log($"Found {dataPersistenceObjects.Count} IDataPersistence objects on load.");
+        // Debug.Log($"Found {dataPersistenceObjects.Count} IDataPersistence objects on load.");
 
         return data;
     }

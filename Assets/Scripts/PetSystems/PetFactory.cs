@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Xml;
 using Unity.VisualScripting;
 using Unity.VisualScripting.Antlr3.Runtime.Misc;
 using UnityEngine;
@@ -70,6 +71,7 @@ public class PetFactory
 
             // Add pet to dictionary
             this.petManager.petInstances.Add(ID, go);
+            this.petManager.petObjectReference.Add(ID, pet);
             // Debug.Log($"Added {ID} to pet dictionary");
             // Debug.Log($"{petManager.petInstances.Count}");
 
@@ -182,13 +184,15 @@ public class PetFactory
 
         // Create unique ID
         string ID = pet.CreateUniqueID();
-        Debug.Log($"New pet's ID: {ID}");
+        // Debug.Log($"New pet's ID: {ID}");
 
         // Initialize identity
         pet.Initialize(typeName, petName);
 
         // Add pet to dictionary
+        this.petManager.uniqueIDs.Add(ID);
         this.petManager.petInstances.Add(ID, go);
+        this.petManager.petObjectReference.Add(ID, pet);
         // Debug.Log($"Added {ID} to pet dictionary");
         // Debug.Log($"{petManager.petInstances.Count}");
 
@@ -211,6 +215,7 @@ public class PetFactory
         pet.traitList = new List<TraitDefinition>(traits);
         pet.traitNames = traits.ConvertAll(t => t.traitName);
 
+        go.SetActive(false);
 
         return pet;
     }
