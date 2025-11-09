@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
 
-// ~ Istvan W
+// Istvan Wallace
 
 public class PetManager : MonoBehaviour, IDataPersistence
 {

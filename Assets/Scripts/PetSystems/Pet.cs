@@ -5,7 +5,7 @@ using UnityEngine;
 using UnityEngine.Windows;
 using static GameData;
 
-// ~ Istvan W
+// Istvan Wallace
 
 // Handles all the factors a pet can inherit related to pet stats
 // Data and Simulation Logic

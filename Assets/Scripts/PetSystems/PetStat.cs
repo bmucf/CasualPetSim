@@ -5,7 +5,7 @@ using System.Xml;
 using UnityEngine;
 using static Pet;
 
-// ~ Istvan W
+// Istvan Wallace
 
 /*
 Component attached to the pet GameObject
