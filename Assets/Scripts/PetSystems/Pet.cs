@@ -10,9 +10,10 @@ using static GameData;
 // Handles all the factors a pet can inherit related to pet stats
 // Data and Simulation Logic
 
-public abstract class Pet : MonoBehaviour, IDataPersistence
+public abstract class Pet : MonoBehaviour, IDataPersistence, IActivatable
 {
     public DataPersistenceManager dataPersistenceManager;
+    public VFXController vfx;
 
     public void LoadData(GameData data)
     {
@@ -206,6 +207,20 @@ public abstract class Pet : MonoBehaviour, IDataPersistence
     {
         uniqueID = Guid.NewGuid().ToString();
         return uniqueID;
+    }
+    public void Activate()
+    {
+        Debug.Log("Clicked!");
+        if (vfx != null)
+        {
+            vfx.TryPlayEffect("Love", this);
+        }
+        else
+        {
+            Debug.LogWarning("No VFXController assigned to Pet!");
+        }
+
+
     }
 
 }
