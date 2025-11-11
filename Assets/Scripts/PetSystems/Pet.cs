@@ -145,10 +145,13 @@ public abstract class Pet : MonoBehaviour, IDataPersistence
         if (sadnessMain < 100)
             sadnessMain += (time * sadnessGrowthRate) * rateOfChange;       // Increase
 
-        ClampStats(ref hungerMain, ref dirtinessMain, ref sleepinessMain, ref sadnessMain);
-
+        // ClampStats(ref hungerMain, ref dirtinessMain, ref sleepinessMain, ref sadnessMain);
+        ClampStat(StatType.Hunger);
+        ClampStat(StatType.Dirtiness);
+        ClampStat(StatType.Sleepiness);
+        ClampStat(StatType.Sadness);
     }
-
+    /*
     void ClampStats(ref float hunger, ref float dirtiness, ref float sleepiness, ref float sadness)
     {   
         // Clamp values between 0 and 100
@@ -159,6 +162,28 @@ public abstract class Pet : MonoBehaviour, IDataPersistence
 
         return;
     }
+    */
+    public enum StatType { Hunger, Dirtiness, Sleepiness, Sadness }
+
+    public void ClampStat(StatType stat)
+    {
+        switch (stat)
+        {
+            case StatType.Hunger:
+                hungerMain = Mathf.Clamp(hungerMain, 0f, 100f);
+                break;
+            case StatType.Dirtiness:
+                dirtinessMain = Mathf.Clamp(dirtinessMain, 0f, 100f);
+                break;
+            case StatType.Sleepiness:
+                sleepinessMain = Mathf.Clamp(sleepinessMain, 0f, 100f);
+                break;
+            case StatType.Sadness:
+                sadnessMain = Mathf.Clamp(sadnessMain, 0f, 100f);
+                break;
+        }
+    }
+
 
     public void Initialize(string typeName, string petName = null)
     {
@@ -176,11 +201,11 @@ public abstract class Pet : MonoBehaviour, IDataPersistence
         {
             uniqueID = ID;
         }
-        else
-        {
-            uniqueID = Guid.NewGuid().ToString();
-            Debug.Log("No ID found. Generating new ID.");
-        }
+    }
+    public string CreateUniqueID()
+    {
+        uniqueID = Guid.NewGuid().ToString();
+        return uniqueID;
     }
 
 }
