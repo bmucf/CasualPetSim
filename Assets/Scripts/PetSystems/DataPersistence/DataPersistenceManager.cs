@@ -5,7 +5,7 @@ using System.Linq;
 using Unity.VisualScripting;
 using UnityEngine;
 
-// ~ Istvan Wallace
+// Istvan Wallace
 
 
 /*
