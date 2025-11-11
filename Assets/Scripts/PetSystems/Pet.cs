@@ -210,7 +210,7 @@ public abstract class Pet : MonoBehaviour, IDataPersistence, IActivatable
     }
     public void Activate()
     {
-        Debug.Log("Clicked!");
+        // Debug.Log("Clicked!");
         if (vfx != null)
         {
             vfx.TryPlayEffect("Love", this);
