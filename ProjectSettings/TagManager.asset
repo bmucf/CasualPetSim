@@ -6,6 +6,7 @@ TagManager:
   tags:
   - Bowl
   - Food
+  - Pet
   layers:
   - Default
   - TransparentFX

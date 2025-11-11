@@ -5,13 +5,13 @@ using System.Linq;
 using Unity.VisualScripting;
 using UnityEngine;
 
-// ~ Istvan Wallace
+// Istvan Wallace
 
 
-/*
-This script goes on an empty game object within the scene
-the category 'File Name' should be named: '{Name}.json'
-*/
+//
+///This script goes on an empty game object within the scene
+///the category 'File Name' should be named: '{Name}.json'
+//
 
 // Note: When pet stats are individually updated they are not updated till next load currently
 

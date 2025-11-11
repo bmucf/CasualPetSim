@@ -3,6 +3,8 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
+// Istvan Wallace +
+
 public class SpawningFood : MonoBehaviour
 {
     [SerializeField] private string currentPetID;
@@ -156,7 +158,6 @@ public class SpawningFood : MonoBehaviour
         float hungerReducePerFood = 5f;
         float totalReduce = foodCount * hungerReducePerFood;
 
-        // ------------------- Current goes over clamp values. Need to fix ------------------- 
         DataPersistenceManager.instance.UpdatePetStat(petID, s => s.hungerMain -= totalReduce);
     }
 }

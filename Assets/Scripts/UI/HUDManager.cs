@@ -1,6 +1,8 @@
 using UnityEngine;
 using UnityEngine.UI;
 
+// Istvan Wallace
+
 public class HUDManager : MonoBehaviour
 {
     [Header("Pet Reference")]

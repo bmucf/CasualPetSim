@@ -5,7 +5,7 @@ using Unity.VisualScripting;
 using Unity.VisualScripting.Antlr3.Runtime.Misc;
 using UnityEngine;
 
-// ~ Istvan W
+// Istvan Wallace
 
 /*
  * This script only creates pet objects

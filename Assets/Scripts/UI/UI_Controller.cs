@@ -4,6 +4,7 @@ using UnityEngine.UI;
 
 public class UI_Controller : MonoBehaviour
 {
+    /*
     public Button rightHub;
     public Button feedButton;
     public Button cleanButton;
@@ -40,4 +41,5 @@ public class UI_Controller : MonoBehaviour
         feedButton.transform.position = feedButton.transform.position + (transform.right * offset)
 
     }
+    */
 }
