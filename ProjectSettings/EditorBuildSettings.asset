@@ -9,10 +9,10 @@ EditorBuildSettings:
     path: Assets/Scenes/_GameScenes/Home.unity
     guid: eef0d79d94293ef4793d9de2712de899
   - enabled: 1
-    path: Assets/Scenes/_GameScenes/BathroomMinigame.unity
+    path: Assets/Scenes/WIP/BathroomMinigame.unity
     guid: 9463b2e9567f1ea44b677501ffb694e5
   - enabled: 1
-    path: Assets/Scenes/WIP/FoodMiniGame.unity
+    path: Assets/Scenes/_GameScenes/MG/FoodMiniGame.unity
     guid: fbc4ca7358cc90746a8f8fe27654fc45
   m_configObjects:
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 052faaac586de48259a63d0c4782560b, type: 3}

@@ -53,11 +53,11 @@ Material:
     m_Ints: []
     m_Floats:
     - _AlphaClip: 0.25
-    - _CloudAlpha: 15
+    - _CloudAlpha: 10
     - _CloudPower: 2.3
     - _CloudScale: 200
     - _DistorSpeed: 0.001
-    - _Distortion: 100
+    - _Distortion: 50
     - _QueueControl: 0
     - _QueueOffset: 0
     - _VertexOffSet: 0.01
