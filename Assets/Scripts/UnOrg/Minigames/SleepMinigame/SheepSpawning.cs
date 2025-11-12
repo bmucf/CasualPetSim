@@ -7,17 +7,25 @@ using UnityEngine.UI;
 
 public class SheepSpawning : MonoBehaviour
 {
-    private float spawnDelay = 2f;
-    private float spawnInterval = 1f;
+    [SerializeField] private string currentPetID;
+
+    [SerializeField] private float spawnDelay = 2f;
+    [SerializeField] private float spawnInterval = 1f;
     public GameObject sheep;
     public bool minigameActive;
 
     public int targetSheep = 5;
     private int sheepCount;
     public TextMeshProUGUI sheepCounter;
+
+    public int pointsPerSheep = 5;
+
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
+        if (SessionContent.CurrentPetID != null)
+            currentPetID = SessionContent.CurrentPetID;
+
         minigameActive = true;
         StartCoroutine(SheepLoop());
         
@@ -31,10 +39,8 @@ public class SheepSpawning : MonoBehaviour
             if (sheepCount == targetSheep)
             {
                 minigameActive = false;
-                SceneManager.LoadScene("Home");
-                //Calling Rewards Function Goes Here
+                SheepEnd();
             }
-
         }
     }
 
@@ -52,6 +58,13 @@ public class SheepSpawning : MonoBehaviour
     public void SheepEnd()
     {
         minigameActive = false;
+        StopCoroutine(SheepLoop());
+
+        // Calling Rewards Function Goes Here
+        ApplyRewardForPetSleep(currentPetID);
+
+        // Go back to "Home" scene
+        SceneManager.LoadScene("Home");
     }
 
     public void SheepScore()
@@ -62,6 +75,9 @@ public class SheepSpawning : MonoBehaviour
 
     private void ApplyRewardForPetSleep(string petID)
     {
+        float totalReduce = sheepCount * pointsPerSheep;
+        Debug.Log($"You have just earned {totalReduce} points!");
 
+        DataPersistenceManager.instance.UpdatePetStat(petID, s => s.sleepinessMain -= totalReduce);
     }
 }

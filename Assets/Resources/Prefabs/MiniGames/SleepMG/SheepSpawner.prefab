@@ -44,5 +44,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bad1a38a8f4e286449108cbb14d76d21, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SheepSpawning
+  currentPetID: 
+  spawnDelay: 5
+  spawnInterval: 1
   sheep: {fileID: 367940619812198173, guid: 328c3dcd25632054e9e7f747f7c5e6bb, type: 3}
   minigameActive: 0
+  targetSheep: 5
+  sheepCounter: {fileID: 0}
+  pointsPerSheep: 5

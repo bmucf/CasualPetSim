@@ -7,14 +7,6 @@ public class TapSheep : MonoBehaviour
     private InputAction positionAction;
     public MoveSheep moveSheep;
 
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-
-    private void Start()
-    {
-        
-    }
-
-
     private void OnEnable()
     {
         tapAction = new InputAction(type: InputActionType.Button);
@@ -51,7 +43,7 @@ public class TapSheep : MonoBehaviour
                     if (tappedSheep != null)
                     {
                         tappedSheep.SheepJump();
-                        Debug.Log("Sheep has Jumped");
+                        // Debug.Log("Sheep has Jumped");
                     }
                 }
             }
