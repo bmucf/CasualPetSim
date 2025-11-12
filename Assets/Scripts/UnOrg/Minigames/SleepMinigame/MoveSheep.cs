@@ -36,7 +36,9 @@ public class MoveSheep : MonoBehaviour
     {
         if (collision.gameObject.CompareTag("Fence"))
         {
+            callSheep.minigameActive = false;
             SceneManager.LoadScene("Home");
+
             Debug.Log("Sheep hit the fence");
             Destroy(gameObject);
         }
