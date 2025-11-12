@@ -11481,7 +11481,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CleanMG
   swipeRocko: {fileID: 2051244897}
-  bathMG: {fileID: 0}
 --- !u!43 &2054413835
 Mesh:
   m_ObjectHideFlags: 0
@@ -12450,6 +12449,18 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4873281435409905443, guid: 2704b5888c4b81f49bba80f44a3cf5ff, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6394045073078809764, guid: 2704b5888c4b81f49bba80f44a3cf5ff, type: 3}
+      propertyPath: InitialModule.startSizeZ.scalar
+      value: 0.2
+      objectReference: {fileID: 0}
+    - target: {fileID: 6394045073078809764, guid: 2704b5888c4b81f49bba80f44a3cf5ff, type: 3}
+      propertyPath: InitialModule.startLifetime.scalar
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6394045073078809764, guid: 2704b5888c4b81f49bba80f44a3cf5ff, type: 3}
+      propertyPath: InitialModule.startRotation.scalar
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
