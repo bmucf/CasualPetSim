@@ -37,19 +37,34 @@ public class PetStat : MonoBehaviour, IDataPersistence
 
     void Update()
     {
-        if (pet.hungerMain < 100 || pet.dirtinessMain < 100 || pet.sleepinessMain < 100 || pet.sadnessMain < 100)
         {
-            // pet.UpdateStats(Time.deltaTime);
-            // Debug.Log("Stat update called.");
+            if (pet.hungerMain < 100 || pet.dirtinessMain < 100 || pet.sleepinessMain < 100 || pet.sadnessMain < 100)
+            {
+                pet.UpdateStats(Time.deltaTime);
+                // Debug.Log("Stat update called.");
+            }
+            if (pet.hungerMain > 100 || pet.hungerMain < 100)
+                pet.ClampStat(StatType.Hunger);
+            if (pet.dirtinessMain > 100 || pet.dirtinessMain < 100)
+                pet.ClampStat(StatType.Dirtiness);
+            if (pet.sleepinessMain > 100 || pet.sleepinessMain < 100)
+                pet.ClampStat(StatType.Sleepiness);
+            if (pet.sadnessMain > 100 || pet.sadnessMain < 100)
+                pet.ClampStat(StatType.Sadness);
         }
-        if (pet.hungerMain > 100)
-            pet.ClampStat(StatType.Hunger);
-        if (pet.dirtinessMain > 100)
-            pet.ClampStat(StatType.Dirtiness);
-        if (pet.sleepinessMain > 100)
-            pet.ClampStat(StatType.Sleepiness);
-        if (pet.sadnessMain > 100)
-            pet.ClampStat(StatType.Sadness);
+        // VFX
+        {
+            // If pet stats are low play death particle
+            if (pet.hungerMain > 90 && pet.dirtinessMain > 90 && pet.sleepinessMain > 90 && pet.sadnessMain > 90)
+                pet.vfx.TryPlayEffect("Death", pet);
+            // If pet sadness is 50 or above play angry particle effect
+            if (pet.sadnessMain > 50)
+                pet.vfx.TryPlayEffect("Angry", pet);
+            // If pet sadness and hunger are lower than 40 play happy particle effect
+            if (pet.sadnessMain <= 40 && pet.hungerMain <= 40)
+                pet.vfx.TryPlayEffect("Happy", pet);
+
+        }
 
         // ApplyStatEffects();
     }

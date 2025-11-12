@@ -158,7 +158,6 @@ public class SpawningFood : MonoBehaviour
         float hungerReducePerFood = 5f;
         float totalReduce = foodCount * hungerReducePerFood;
 
-        // ------------------- Current goes over clamp values. Need to fix ------------------- 
         DataPersistenceManager.instance.UpdatePetStat(petID, s => s.hungerMain -= totalReduce);
     }
 }

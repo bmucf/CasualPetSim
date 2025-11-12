@@ -33,7 +33,7 @@ public class CinemachineDynamicTargetSwitcher : MonoBehaviour
             currentTarget = found.transform;
             cinemachineCam.Follow = currentTarget;
             cinemachineCam.LookAt = currentTarget;
-            Debug.Log($"Cinemachine target switched to: {currentTarget.name}");
+            // Debug.Log($"Cinemachine target switched to: {currentTarget.name}");
         }
         // If it's no longer valid (inactive), clear or revert to default
         else if (!valid && currentTarget != null)
