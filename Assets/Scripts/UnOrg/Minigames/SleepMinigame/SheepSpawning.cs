@@ -39,6 +39,7 @@ public class SheepSpawning : MonoBehaviour
             if (sheepCount == targetSheep)
             {
                 minigameActive = false;
+                SceneManager.LoadScene("Home");
                 SheepEnd();
             }
         }
