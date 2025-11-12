@@ -2,36 +2,24 @@ using UnityEngine;
 
 public class ShopItem : MonoBehaviour
 {
-    public enum ItemType
-    {
-        PremiumFood,
-        PremiumSoap
-    }
+    public enum ItemType { PremiumFood, PremiumSoap }
 
     [Header("Config")]
     public ItemType itemType;
-    public int amountToGive = 1; // how many per buy
+    public int amountToGive = 1; // per purchase
 
-    // called by Buy button
+    // called by BUY button
     public void OnBuy()
     {
-        if (InventoryManager.Instance == null)
-        {
-            Debug.LogError("No InventoryManager found.");
-            return;
-        }
+        if (InventoryManager.Instance == null) return;
 
-        switch (itemType)
-        {
-            case ItemType.PremiumFood:
-                InventoryManager.Instance.AddPremiumFood(amountToGive);
-                break;
+        if (itemType == ItemType.PremiumFood)
+            InventoryManager.Instance.AddPremiumFood(amountToGive);
+        else
+            InventoryManager.Instance.AddPremiumSoap(amountToGive);
 
-            case ItemType.PremiumSoap:
-                InventoryManager.Instance.AddPremiumSoap(amountToGive);
-                break;
-        }
-
-        Debug.Log("Bought " + itemType + " x" + amountToGive);
+        // optional: ping inventory UI if open
+        var inv = FindAnyObjectByType<InventoryPanelUI>();
+        if (inv != null) inv.Refresh();
     }
 }
