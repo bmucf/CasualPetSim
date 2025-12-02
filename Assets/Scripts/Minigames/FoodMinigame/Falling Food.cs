@@ -5,6 +5,9 @@ public class FallingFood : MonoBehaviour
 {
     private SpawningFood spawningFood;
     private Rigidbody rb;
+    private AudioSource foodDing;
+    public AudioClip ding;
+   
 
     [Header("Gravity Settings")]
     public bool useGravity = true;   // toggle Unity's gravity
@@ -18,6 +21,8 @@ public class FallingFood : MonoBehaviour
     void Awake()
     {
         rb = GetComponent<Rigidbody>();
+        foodDing = GetComponent<AudioSource>();
+        foodDing.PlayOneShot(ding);
     }
 
     private void Start()
@@ -52,6 +57,7 @@ public class FallingFood : MonoBehaviour
         if (other.CompareTag("Bowl"))
         {
             // Debug.Log("A food hit has been collected");
+            foodDing.PlayOneShot(ding);
             spawningFood.UpdateScore();
             Destroy(gameObject);
         }

@@ -7,6 +7,10 @@ public class MoveSheep : MonoBehaviour
     private SheepSpawning callSheep;
 
     public Rigidbody sheepRb;
+    private AudioSource sheepAudio;
+
+    public AudioClip sheepJumpSFX;
+    public AudioClip sheepDeathSFX;
 
     public float speedForce;
     public float jumpForce;
@@ -18,6 +22,7 @@ public class MoveSheep : MonoBehaviour
     void Start()
     {
         callSheep = GameObject.Find("SheepSpawner").GetComponent<SheepSpawning>();
+        sheepAudio = GetComponent<AudioSource>();
     }
 
 
@@ -27,6 +32,7 @@ public class MoveSheep : MonoBehaviour
 
         if (transform.position.x >= 19)
         {
+            sheepAudio.PlayOneShot(sheepDeathSFX);
             callSheep.SheepScore();
             Destroy(gameObject);
         }
@@ -48,6 +54,7 @@ public class MoveSheep : MonoBehaviour
     {
         if (currentTaps <= maxTaps)
         {
+            sheepAudio.PlayOneShot(sheepJumpSFX);
             sheepRb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
             currentTaps++;
         }
