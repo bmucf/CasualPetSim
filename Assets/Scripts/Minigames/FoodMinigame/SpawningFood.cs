@@ -159,5 +159,6 @@ public class SpawningFood : MonoBehaviour
         float totalReduce = foodCount * hungerReducePerFood;
 
         DataPersistenceManager.instance.UpdatePetStat(petID, s => s.hungerMain -= totalReduce);
+        DataPersistenceManager.instance.UpdatePetStat(petID, s => s.sadnessMain -= totalReduce / 3);
     }
 }

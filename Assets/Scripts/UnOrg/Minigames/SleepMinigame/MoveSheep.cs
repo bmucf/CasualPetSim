@@ -30,11 +30,11 @@ public class MoveSheep : MonoBehaviour
     {
         transform.Translate(Vector3.right * speedForce * Time.deltaTime);
 
-        if (transform.position.x >= 19)
+        if (transform.position.x >= 6)
         {
-            sheepAudio.PlayOneShot(sheepDeathSFX);
+
             callSheep.SheepScore();
-            Destroy(gameObject);
+                Destroy(gameObject);
         }
     }
 
@@ -45,6 +45,7 @@ public class MoveSheep : MonoBehaviour
             callSheep.minigameActive = false;
             SceneManager.LoadScene("Home");
 
+            // sheepAudio.PlayOneShot(sheepDeathSFX);
             Debug.Log("Sheep hit the fence");
             Destroy(gameObject);
         }

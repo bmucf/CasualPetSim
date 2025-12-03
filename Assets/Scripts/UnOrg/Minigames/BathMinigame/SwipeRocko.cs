@@ -199,5 +199,6 @@ public class SwipeRocko : MonoBehaviour
     {
         float totalReduce = cleanCount * 5;
         DataPersistenceManager.instance.UpdatePetStat(petID, s => s.dirtinessMain -= totalReduce);
+        DataPersistenceManager.instance.UpdatePetStat(petID, s => s.sadnessMain -= totalReduce / 3);
     }
 }

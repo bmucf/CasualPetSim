@@ -79,5 +79,6 @@ public class SheepSpawning : MonoBehaviour
         Debug.Log($"You have just earned {totalReduce} points!");
 
         DataPersistenceManager.instance.UpdatePetStat(petID, s => s.sleepinessMain -= totalReduce);
+        DataPersistenceManager.instance.UpdatePetStat(petID, s => s.sadnessMain -= totalReduce / 3);
     }
 }
