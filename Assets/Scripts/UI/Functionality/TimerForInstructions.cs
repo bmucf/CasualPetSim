@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class TimerForDrag : MonoBehaviour
+public class TimerForInstructions : MonoBehaviour
 {
     private float instructTime = 2f;
     public GameObject instruction;
@@ -9,7 +9,7 @@ public class TimerForDrag : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        
+
     }
 
     // Update is called once per frame
