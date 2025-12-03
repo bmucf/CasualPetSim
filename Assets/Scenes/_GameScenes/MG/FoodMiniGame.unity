@@ -1187,7 +1187,7 @@ AudioSource:
   m_audioClip: {fileID: 0}
   m_Resource: {fileID: 8300000, guid: 26491bd7ac424724c87edac7c3bca4f9, type: 3}
   m_PlayOnAwake: 1
-  m_Volume: 1
+  m_Volume: 0.2
   m_Pitch: 1
   Loop: 1
   Mute: 0
@@ -1310,6 +1310,10 @@ PrefabInstance:
       propertyPath: foodCamera
       value: 
       objectReference: {fileID: 856743299}
+    - target: {fileID: 1381398334796583296, guid: 3e7231a648355db4cbff7ce70f1f2911, type: 3}
+      propertyPath: m_Volume
+      value: 0.25
+      objectReference: {fileID: 0}
     - target: {fileID: 1397192844890561586, guid: 3e7231a648355db4cbff7ce70f1f2911, type: 3}
       propertyPath: m_Size.x
       value: 1.4265522
