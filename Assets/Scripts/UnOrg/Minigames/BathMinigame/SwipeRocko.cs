@@ -1,7 +1,8 @@
+using System.Collections;
 using TMPro;
 using UnityEngine;
 using UnityEngine.InputSystem;
-using System.Collections;
+using UnityEngine.SceneManagement;
 
 
 public class SwipeRocko : MonoBehaviour
@@ -14,6 +15,7 @@ public class SwipeRocko : MonoBehaviour
     public float cleanCount = 0;
     public TextMeshProUGUI cleanText;
     public bool scrubRocko;
+    public bool minigameActive;
     //public Camera bathCam;
 
 
@@ -122,10 +124,12 @@ public class SwipeRocko : MonoBehaviour
         cam = Camera.main.transform;
     }
 
-    private void Start()
+    void Start()
     {
         if (SessionContent.CurrentPetID != null)
             currentPetID = SessionContent.CurrentPetID;
+
+        minigameActive = true;
     }
 
     private void Update()
@@ -142,6 +146,15 @@ public class SwipeRocko : MonoBehaviour
                 timer--;
             }
 
+        }
+
+        if (minigameActive)
+        {
+            if (cleanCount == 20)
+            {
+                minigameActive = false;
+                ShowerEnd();
+            }
         }
     }
 
@@ -165,11 +178,21 @@ public class SwipeRocko : MonoBehaviour
         cleanText.text = "Cleanliness: " + cleanCount * 5 + "%";
     }
 
+    public void ShowerEnd()
+    {
+        minigameActive = false;
+
+        // Calling Rewards Function Goes Here
+        ApplyCleaningRewardToPet(currentPetID);
+
+        // Go back to "Home" scene
+        SceneManager.LoadScene("Home");
+    }
+
+
     private void ApplyCleaningRewardToPet(string petID)
     {
-        float hungerReducePerFood = 5f;
-        float totalReduce = cleanCount * hungerReducePerFood;
-
-        DataPersistenceManager.instance.UpdatePetStat(petID, s => s.hungerMain -= totalReduce);
+        float totalReduce = cleanCount * 5;
+        DataPersistenceManager.instance.UpdatePetStat(petID, s => s.dirtinessMain -= totalReduce);
     }
 }
