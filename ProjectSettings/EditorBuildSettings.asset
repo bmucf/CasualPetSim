@@ -9,7 +9,7 @@ EditorBuildSettings:
     path: Assets/Scenes/_GameScenes/Home.unity
     guid: eef0d79d94293ef4793d9de2712de899
   - enabled: 1
-    path: Assets/Scenes/WIP/BathroomMinigame.unity
+    path: Assets/Scenes/_GameScenes/MG/BathroomMinigame.unity
     guid: 9463b2e9567f1ea44b677501ffb694e5
   - enabled: 1
     path: Assets/Scenes/_GameScenes/MG/FoodMiniGame.unity
