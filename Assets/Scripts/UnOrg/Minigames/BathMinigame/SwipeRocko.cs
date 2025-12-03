@@ -1,67 +1,20 @@
+// 12/3/2025 AI-Tag
+// This was created with the help of Assistant, a Unity Artificial Intelligence product.
+
 using System.Collections;
 using TMPro;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
 
-
 public class SwipeRocko : MonoBehaviour
 {
     [SerializeField] private string currentPetID;
-
-    //private Vector2 startTouchPosition;
-    //private Vector2 endTouchPosition;
 
     public float cleanCount = 0;
     public TextMeshProUGUI cleanText;
     public bool scrubRocko;
     public bool minigameActive;
-    //public Camera bathCam;
-
-
-    //// Start is called once before the first execution of Update after the MonoBehaviour is created
-    //void Start()
-    //{
-
-    //}
-
-    //// Update is called once per frame
-    //void Update()
-    //{
-    //    if (Input.touchCount > 0 && Input.GetTouch(0).phase == TouchPhase.Began)
-    //    {
-    //        startTouchPosition = Input.GetTouch(0).position;
-
-    //        Ray ray = bathCam.ScreenPointToRay(Input.GetTouch(0).position);
-    //        if (Physics.Raycast(ray, out RaycastHit hit))
-    //        {
-    //            if (hit.transform == transform)
-    //            {
-    //                scrubRocko = true;
-    //            }
-    //            else
-    //            {
-    //                scrubRocko = false;
-    //            }
-    //        }
-    //    }
-
-    //    if (Input.touchCount > 0 && Input.GetTouch(0).phase == TouchPhase.Ended && scrubRocko)
-    //    {
-    //        endTouchPosition = Input.GetTouch(0).position;
-
-    //        if (endTouchPosition.x < startTouchPosition.x)
-    //        {
-    //            AddClean(); 
-    //        }
-
-    //        if (endTouchPosition.x > startTouchPosition.x)
-    //        {
-    //            AddClean();
-    //        }
-    //        scrubRocko = false;
-    //    }
-    //}
 
     [SerializeField] private InputAction pressed, axis, screenPos;
 
@@ -127,7 +80,14 @@ public class SwipeRocko : MonoBehaviour
     void Start()
     {
         if (SessionContent.CurrentPetID != null)
+        {
             currentPetID = SessionContent.CurrentPetID;
+            Debug.Log($"CurrentPetID set to: {currentPetID}");
+        }
+        else
+        {
+            Debug.LogError("SessionContent.CurrentPetID is null. Ensure it is set correctly before starting the minigame.");
+        }
 
         minigameActive = true;
     }
@@ -145,7 +105,6 @@ public class SwipeRocko : MonoBehaviour
             {
                 timer--;
             }
-
         }
 
         if (minigameActive)
@@ -166,16 +125,15 @@ public class SwipeRocko : MonoBehaviour
         {
             rotation *= rotateSpeed;
             transform.Rotate(-cam.up, rotation.x, Space.World);
-            // transform.Rotate(cam.right, rotation.y, Space.World);
             yield return null;
         }
     }
-
 
     void AddClean()
     {
         cleanCount++;
         cleanText.text = "Cleanliness: " + cleanCount * 5 + "%";
+        Debug.Log($"Cleanliness updated: {cleanCount * 5}%");
     }
 
     public void ShowerEnd()
@@ -189,10 +147,21 @@ public class SwipeRocko : MonoBehaviour
         SceneManager.LoadScene("Home");
     }
 
-
     private void ApplyCleaningRewardToPet(string petID)
     {
+        if (string.IsNullOrEmpty(petID))
+        {
+            Debug.LogError("Pet ID is null or empty. Cannot apply cleaning reward.");
+            return;
+        }
+
         float totalReduce = cleanCount * 5;
-        DataPersistenceManager.instance.UpdatePetStat(petID, s => s.dirtinessMain -= totalReduce);
+        Debug.Log($"Applying cleaning reward to pet with ID: {petID}, reducing dirtiness by: {totalReduce}");
+
+        DataPersistenceManager.instance.UpdatePetStat(petID, s =>
+        {
+            Debug.Log($"Updating pet stats for ID: {petID}");
+            s.dirtinessMain -= totalReduce;
+        });
     }
 }

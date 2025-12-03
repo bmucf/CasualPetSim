@@ -18,7 +18,7 @@ public class SheepSpawning : MonoBehaviour
     private int sheepCount;
     public TextMeshProUGUI sheepCounter;
 
-    public int pointsPerSheep = 5;
+    public int pointsPerSheep = 100;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
