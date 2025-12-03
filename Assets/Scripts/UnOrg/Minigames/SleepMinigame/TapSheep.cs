@@ -38,8 +38,9 @@ public class TapSheep : MonoBehaviour
             {
                 if (hit.collider.CompareTag("Sheep"))
                 {
-                    
-                    if (hit.collider.TryGetComponent<MoveSheep>(out var tappedSheep))
+                    MoveSheep tappedSheep = hit.collider.GetComponent<MoveSheep>();
+
+                    if (tappedSheep != null)
                     {
                         tappedSheep.SheepJump();
                         // Debug.Log("Sheep has Jumped");
