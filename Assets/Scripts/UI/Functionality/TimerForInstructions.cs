@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class TimerForInstructions : MonoBehaviour
 {
-    private float instructTime = 2f;
+    private float instructTime = 1f;
     public GameObject instruction;
 
 

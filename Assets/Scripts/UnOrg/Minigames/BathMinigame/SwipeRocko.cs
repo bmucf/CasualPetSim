@@ -16,6 +16,8 @@ public class SwipeRocko : MonoBehaviour
     public TextMeshProUGUI cleanText;
     public bool scrubRocko;
     public bool minigameActive;
+    private AudioSource rockoAudio;
+    public AudioClip rockoScrub;
     //public Camera bathCam;
 
 
@@ -99,6 +101,8 @@ public class SwipeRocko : MonoBehaviour
     {
         timerTarget = timer;
 
+        rockoAudio = GetComponent<AudioSource>();
+
         camera = Camera.main;
 
         pressed.AddBinding("<Mouse>/leftButton");
@@ -174,6 +178,7 @@ public class SwipeRocko : MonoBehaviour
 
     void AddClean()
     {
+        rockoAudio.PlayOneShot(rockoScrub);
         cleanCount++;
         cleanText.text = "Cleanliness: " + cleanCount * 5 + "%";
     }
