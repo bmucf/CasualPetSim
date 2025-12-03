@@ -12,9 +12,6 @@ public class SwipeRocko : MonoBehaviour
     public float cleanCount = 0;
     public TextMeshProUGUI cleanText;
     public bool scrubRocko;
-    private AudioSource rockoAudio;
-    public AudioClip rockoScrub;
-
     //public Camera bathCam;
 
 
@@ -96,8 +93,6 @@ public class SwipeRocko : MonoBehaviour
 
     private void Awake()
     {
-        rockoAudio = GetComponent<AudioSource>();
-
         timerTarget = timer;
 
         camera = Camera.main;
@@ -158,7 +153,6 @@ public class SwipeRocko : MonoBehaviour
 
     void AddClean()
     {
-        rockoAudio.PlayOneShot(rockoScrub);
         cleanCount++;
         cleanText.text = "Clean Progress " + cleanCount;
     }
