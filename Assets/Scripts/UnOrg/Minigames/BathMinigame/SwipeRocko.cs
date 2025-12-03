@@ -6,6 +6,8 @@ using System.Collections;
 
 public class SwipeRocko : MonoBehaviour
 {
+    [SerializeField] private string currentPetID;
+
     //private Vector2 startTouchPosition;
     //private Vector2 endTouchPosition;
 
@@ -120,6 +122,12 @@ public class SwipeRocko : MonoBehaviour
         cam = Camera.main.transform;
     }
 
+    private void Start()
+    {
+        if (SessionContent.CurrentPetID != null)
+            currentPetID = SessionContent.CurrentPetID;
+    }
+
     private void Update()
     {
         if (isGrabbed)
@@ -154,6 +162,14 @@ public class SwipeRocko : MonoBehaviour
     void AddClean()
     {
         cleanCount++;
-        cleanText.text = "Clean Progress " + cleanCount;
+        cleanText.text = "Cleanliness: " + cleanCount * 5 + "%";
+    }
+
+    private void ApplyCleaningRewardToPet(string petID)
+    {
+        float hungerReducePerFood = 5f;
+        float totalReduce = cleanCount * hungerReducePerFood;
+
+        DataPersistenceManager.instance.UpdatePetStat(petID, s => s.hungerMain -= totalReduce);
     }
 }
